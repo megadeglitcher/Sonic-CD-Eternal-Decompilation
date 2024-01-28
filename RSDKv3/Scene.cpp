@@ -334,6 +334,46 @@ void ProcessStage(void)
                 ResumeSound();
             }
             break;
+
+        case STAGEMODE_FROZEN:
+            drawStageGFXHQ = false;
+            DrawStageGFX();
+            if (fadeMode > 0)
+                fadeMode--;
+
+            if (paletteMode > 0) {
+                paletteMode = 0;
+                SetActivePalette(0, 0, 256);
+            }
+            lastXSize = -1;
+            lastYSize = -1;
+            CheckKeyDown(&keyDown, 0xFF);
+            CheckKeyPress(&keyPress, 0xFF);
+
+            // Update
+            ProcessFrozenObjects();
+
+            if (renderType == RENDER_HW) {
+                gfxIndexSize        = 0;
+                gfxVertexSize       = 0;
+                gfxIndexSizeOpaque  = 0;
+                gfxVertexSizeOpaque = 0;
+            }
+#if !RETRO_USE_ORIGINAL_CODE
+            // Hacky fix for Tails Object not working properly on non-Origins bytecode
+            if (forceUseScripts || GetGlobalVariableByName("NOTIFY_1P_VS_SELECT") != 0)
+#endif
+
+
+#if !RETRO_USE_ORIGINAL_CODE
+            DrawDebugOverlays();
+#endif
+
+            if (pauseEnabled && keyPress.start) {
+                stageMode = STAGEMODE_NORMAL;
+                ResumeSound();
+            }
+            break;
     }
     Engine.frameCount++;
 }
@@ -387,7 +427,7 @@ void LoadStageFiles(void)
                 SetObjectTypeName(strBuffer, i + scriptID);
             }
 
-#if RETRO_USE_MOD_LOADER && RETRO_USE_COMPILER
+#if RETRO_USE_MOD_LOADER
             for (byte i = 0; i < modObjCount && loadGlobalScripts; ++i) {
                 SetObjectTypeName(modTypeNames[i], globalObjectCount + i + 1);
             }

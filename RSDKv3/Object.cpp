@@ -135,3 +135,27 @@ void ProcessPausedObjects()
         }
     }
 }
+
+void ProcessFrozenObjects()
+{
+
+    for (objectLoop = 0; objectLoop < ENTITY_COUNT; ++objectLoop) {
+        Entity *entity = &objectEntityList[objectLoop];
+        if (entity->priority != PRIORITY_ALWAYS && entity->type > OBJ_TYPE_BLANKOBJECT) {
+            ObjectScript *scriptInfo = &objectScriptList[entity->type > OBJ_TYPE_BLANKOBJECT];
+        }
+        if (entity->priority == PRIORITY_ALWAYS && entity->type > OBJ_TYPE_BLANKOBJECT) {
+                drawListEntries[entity->drawOrder].entityRefs[drawListEntries[entity->drawOrder].listSize++] = 8;
+            ObjectScript *scriptInfo = &objectScriptList[entity->type];
+            activePlayer             = 0;
+            if (scriptCode[scriptInfo->subMain.scriptCodePtr] > 0)
+                ProcessScript(scriptInfo->subMain.scriptCodePtr, scriptInfo->subMain.jumpTablePtr, SUB_MAIN);
+
+            if (entity->drawOrder < DRAWLAYER_COUNT)
+                drawListEntries[entity->drawOrder].entityRefs[drawListEntries[entity->drawOrder].listSize++] = objectLoop;
+            if (entity->priority == PRIORITY_ALWAYS && entity->type > OBJ_TYPE_BLANKOBJECT) {
+                drawListEntries[entity->drawOrder].entityRefs[drawListEntries[entity->drawOrder].listSize++] = 7;
+		}
+        }
+    }
+}

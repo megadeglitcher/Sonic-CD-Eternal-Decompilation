@@ -59,6 +59,7 @@ extern const int OBJECT_BORDER_Y2;
 void ProcessStartupObjects();
 void ProcessObjects();
 void ProcessPausedObjects();
+void ProcessFrozenObjects();
 
 void SetObjectTypeName(const char *objectName, int objectID);
 

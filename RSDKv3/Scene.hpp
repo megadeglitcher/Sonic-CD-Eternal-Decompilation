@@ -42,6 +42,7 @@ enum StageModes {
     STAGEMODE_LOAD,
     STAGEMODE_NORMAL,
     STAGEMODE_PAUSED,
+    STAGEMODE_FROZEN,
 };
 
 enum TileInfo {
