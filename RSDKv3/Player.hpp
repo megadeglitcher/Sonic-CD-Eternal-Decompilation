@@ -68,6 +68,12 @@ extern ushort rightBuffer;
 extern ushort jumpPressBuffer;
 extern ushort jumpHoldBuffer;
 
+extern byte nextLeaderPosID;
+extern byte lastLeaderPosID;
+
+extern short leaderPositionBufferX[16];
+extern short leaderPositionBufferY[16];
+
 void ProcessPlayerControl(Player *player);
 
 #endif // !PLAYER_H
