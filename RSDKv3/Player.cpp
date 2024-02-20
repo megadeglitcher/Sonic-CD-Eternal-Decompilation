@@ -23,17 +23,17 @@ void ProcessPlayerControl(Player *player)
     switch (player->controlMode) {
         default:
         case CONTROLMODE_NORMAL:
-            player->up    = keyDown.up || controller[CONT_P1].keyUp.down;
-            player->down  = keyDown.down || controller[CONT_P1].keyDown.down;
-            player->left  = keyDown.left || controller[CONT_P1].keyLeft.down;
-            player->right = keyDown.right || controller[CONT_P1].keyRight.down;
+            player->up    = keyDown.up;
+            player->down  = keyDown.down;
+            player->left  = keyDown.left;
+            player->right = keyDown.right;
 
             if (player->left && player->right) {
                 player->left  = false;
                 player->right = false;
             }
 
-            player->jumpHold  = keyDown.A || keyPress.B || keyPress.C;
+            player->jumpHold  = keyDown.A || keyDown.B || keyDown.C;
             player->jumpPress = keyPress.A || keyPress.B || keyPress.C;
 
             upBuffer <<= 1;
