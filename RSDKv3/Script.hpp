@@ -76,14 +76,12 @@ bool ConvertStringToInteger(char *text, int *value);
 #if RETRO_USE_COMPILER
 
 void CheckAliasText(char *text);
-bool CheckTableText(char *text);
 void ConvertArithmaticSyntax(char *text);
 void ConvertIfWhileStatement(char *text);
 bool ConvertSwitchStatement(char *text);
 void ConvertFunctionText(char *text);
 void CheckCaseNumber(char *text);
 bool ReadSwitchCase(char *text);
-void ReadTableValues(char *text);
 void AppendIntegerToString(char *text, int value);
 void CopyAliasStr(char *dest, char *text, bool arrayIndex);
 bool CheckOpcodeType(char *text); // Never actually used

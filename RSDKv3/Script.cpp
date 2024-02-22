@@ -428,8 +428,6 @@ const FunctionInfo functions[] = {
     FunctionInfo("DrawText", 7),
     FunctionInfo("GetTextInfo", 5),
     FunctionInfo("GetVersionNumber", 2),
-    FunctionInfo("GetTableValue", 3),
-    FunctionInfo("SetTableValue", 3),
     FunctionInfo("SetAchievement", 2),
     FunctionInfo("SetLeaderboard", 2),
     FunctionInfo("LoadOnlineMenu", 1),
@@ -463,7 +461,6 @@ AliasInfo aliases[ALIAS_COUNT] = { AliasInfo("true", "1"),
                                    AliasInfo("FACING_LEFT", "1"),
                                    AliasInfo("FACING_RIGHT", "0"),
                                    AliasInfo("STAGE_PAUSED", "2"),
-                                   AliasInfo("STAGE_FROZEN", "3"),
                                    AliasInfo("STAGE_RUNNING", "1"),
                                    AliasInfo("RESET_GAME", "2"),
                                    AliasInfo("RETRO_WIN", "0"),
@@ -484,7 +481,6 @@ enum ScriptParseModes {
     PARSEMODE_PLATFORMSKIP = 1,
     PARSEMODE_FUNCTION     = 2,
     PARSEMODE_SWITCHREAD   = 3,
-    PARSEMODE_TABLEREAD    = 4,
     PARSEMODE_ERROR        = 0xFF
 };
 #endif
@@ -858,8 +854,6 @@ enum ScrFunction {
     FUNC_DRAWTEXT,
     FUNC_GETTEXTINFO,
     FUNC_GETVERSIONNUMBER,
-    FUNC_GETTABLEVALUE,
-    FUNC_SETTABLEVALUE,
     FUNC_SETACHIEVEMENT,
     FUNC_SETLEADERBOARD,
     FUNC_LOADONLINEMENU,
@@ -916,87 +910,6 @@ void CheckAliasText(char *text)
     }
 
     ++aliasCount;
-}
-bool CheckTableText(char *text)
-{
-    bool hasValues = false;
-
-    if (FindStringToken(text, "#table", 1) == 0) {
-#if !RETRO_USE_ORIGINAL_CODE
-	    if (aliasCount >= ALIAS_COUNT) {
-	        SetupTextMenu(&gameMenu[0], 0);
-	        AddTextMenuEntry(&gameMenu[0], "SCRIPT PARSING FAILED");
-	        AddTextMenuEntry(&gameMenu[0], " ");
-	        AddTextMenuEntry(&gameMenu[0], "TOO MANY TABLES");
-	        Engine.gameMode = ENGINE_SCRIPTERROR;
-	        return false;
-	    }
-#endif
-
-        AliasInfo *variable = &aliases[aliasCount];
-        MEM_ZERO(*variable);
-
-        int textStrPos = 6;
-        int varStrPos  = 0;
-
-        while (text[textStrPos]) {
-            if (text[textStrPos] == '[' || text[textStrPos] == ']') {
-                variable->name[varStrPos] = 0;
-                textStrPos++;
-                break;
-            }
-            else {
-                variable->name[varStrPos++] = text[textStrPos++];
-            }
-        }
-
-        if (FindStringToken(text, "]", 1) < 1) {
-            // has default values, we'll stop here and read stuff in a seperate mode
-            scriptCode[scriptCodePos] = 0;
-            StrCopy(variable->value, "");
-            AppendIntegerToString(variable->value, scriptCodePos);
-            scriptCodeOffset = scriptCodePos++;
-            hasValues        = true;
-        }
-        else {
-            // no default values, just an array size
-
-            varStrPos = 0;
-            while (text[textStrPos]) {
-                if (text[textStrPos] == '[' || text[textStrPos] == ']') {
-                    variable->value[varStrPos] = 0;
-                    textStrPos++;
-                    break;
-                }
-                else {
-                    variable->value[varStrPos++] = text[textStrPos++];
-                }
-            }
-
-            // array size can be an variable (alias), how cool!
-            for (int v = 0; v = aliasCount; ++v) {
-                if (StrComp(variable->value, aliases[v].name))
-                    StrCopy(variable->value, aliases[v].value);
-            }
-
-            if (!ConvertStringToInteger(variable->value, &scriptCode[scriptCodePos])) {
-                scriptCode[scriptCodePos] = 1;
-#if !RETRO_USE_ORIGINAL_CODE
-                PrintLog("WARNING: Unable to parse table size!");
-#endif
-            }
-
-            StrCopy(variable->value, "");
-            AppendIntegerToString(variable->value, scriptCodePos);
-
-            int valueCount = scriptCode[scriptCodePos++];
-            for (int v = 0; v < valueCount; ++v) scriptCode[scriptCodePos++] = 0;
-        }
-
-        aliasCount++;
-    }
-
-    return hasValues;
 }
 void ConvertArithmaticSyntax(char *text)
 {
@@ -1547,43 +1460,6 @@ bool ReadSwitchCase(char *text)
 
     return false;
 }
-void ReadTableValues(char *text)
-{
-    int textStrPos = 0;
-
-    char valueBuffer[256];
-    int valueBufferPos = 0;
-
-    while (text[textStrPos]) {
-        valueBuffer[valueBufferPos++] = text[textStrPos++];
-
-        while (text[textStrPos] == ',') {
-            valueBuffer[valueBufferPos] = 0;
-            ++scriptCode[scriptCodeOffset];
-            if (!ConvertStringToInteger(valueBuffer, &scriptCode[scriptCodePos])) {
-                scriptCode[scriptCodePos] = 0;
-#if !RETRO_USE_ORIGINAL_CODE
-                PrintLog("WARNING: unable to parse table value \"%s\" as an int, on line %d", valueBuffer, lineID);
-#endif
-            }
-            scriptCodePos++;
-            valueBufferPos = 0;
-            textStrPos++;
-        }
-    }
-
-    if (StrLength(valueBuffer)) {
-        valueBuffer[valueBufferPos] = 0;
-        ++scriptCode[scriptCodeOffset];
-        if (!ConvertStringToInteger(valueBuffer, &scriptCode[scriptCodePos])) {
-            scriptCode[scriptCodePos] = 0;
-#if !RETRO_USE_ORIGINAL_CODE
-            PrintLog("WARNING: unable to parse table value \"%s\" as an int, on line %d", valueBuffer, lineID);
-#endif
-        }
-        scriptCodePos++;
-    }
-}
 void AppendIntegerToString(char *text, int value)
 {
     int textPos = 0;
@@ -1820,10 +1696,6 @@ void ParseScriptFile(char *scriptName, int scriptID)
                 case PARSEMODE_SCOPELESS:
                     ++lineID;
                     CheckAliasText(scriptText);
-                    if (CheckTableText(scriptText)) {
-                        parseMode = PARSEMODE_TABLEREAD;
-                        StrCopy(scriptText, "");
-                    }
                     if (StrComp(scriptText, "subObjectMain")) {
                         parseMode                                        = PARSEMODE_FUNCTION;
                         objectScriptList[scriptID].subMain.scriptCodePtr = scriptCodePos;
@@ -1983,20 +1855,6 @@ void ParseScriptFile(char *scriptName, int scriptID)
                     }
                     else {
                         CheckCaseNumber(scriptText);
-                    }
-                    break;
-
-                case PARSEMODE_TABLEREAD:
-                    ++lineID;
-
-                    if (FindStringToken(scriptText, "endtable", 1) == 0) {
-                        parseMode = PARSEMODE_SCOPELESS;
-                    }
-                    else {
-                        if (StrLength(scriptText) >= 1)
-                            ReadTableValues(scriptText);
-
-                        parseMode = PARSEMODE_TABLEREAD;
                     }
                     break;
 
@@ -4124,27 +3982,6 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                 TextMenu *menu                       = &gameMenu[scriptEng.operands[0]];
                 menu->entryHighlight[menu->rowCount] = scriptEng.operands[1];
                 AddTextMenuEntry(menu, Engine.gameVersion);
-                break;
-            }
-            case FUNC_GETTABLEVALUE: {
-                int arrPos = scriptEng.operands[1];
-                if (arrPos >= 0) {
-                    int pos     = scriptEng.operands[2];
-                    int arrSize = scriptCode[pos];
-                    if (arrPos < arrSize)
-                        scriptEng.operands[0] = scriptCode[pos + arrPos + 1];
-                }
-                break;
-            }
-            case FUNC_SETTABLEVALUE: {
-                opcodeSize   = 0;
-                int arrPos = scriptEng.operands[1];
-                if (arrPos >= 0) {
-                    int pos     = scriptEng.operands[2];
-                    int arrSize = scriptCode[pos];
-                    if (arrPos < arrSize)
-                        scriptCode[pos + arrPos + 1] = scriptEng.operands[0];
-                }
                 break;
             }
             case FUNC_SETACHIEVEMENT:
