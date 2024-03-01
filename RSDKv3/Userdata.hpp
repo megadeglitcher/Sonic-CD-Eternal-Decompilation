@@ -8,7 +8,7 @@
 
 #define MOD_COUNT (0x100)
 
-#define SAVEDATA_SIZE (0x2000)
+#define SAVEDATA_SIZE (0x4000)
 
 enum OnlineMenuTypes {
     ONLINEMENU_ACHIEVEMENTS = 0,

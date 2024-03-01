@@ -2,8 +2,8 @@
 #define DRAWING_H
 
 // #define SURFACE_COUNT (24)
-#define SURFACE_COUNT (32) // originally 24, updated to 32 in sega forever vers
-#define GFXDATA_SIZE  (0x800 * 0x800)
+#define SURFACE_COUNT (1280) // originally 24, updated to 32 in sega forever vers
+#define GFXDATA_SIZE  (0x1600 * 0x1600)
 
 // usually 7, but origins has an extra one for some reason
 #define DRAWLAYER_COUNT (8)
