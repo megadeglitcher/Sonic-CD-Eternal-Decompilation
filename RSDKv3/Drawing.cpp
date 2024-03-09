@@ -100,7 +100,7 @@ int InitRenderDevice()
 {
     char gameTitle[0x40];
 
-    sprintf(gameTitle, "%s%s", Engine.gameWindowText, Engine.usingDataFile_Config ? "" : " (Using Data Folder)");
+    sprintf(gameTitle, Engine.gameWindowText, NULL);
 
 #if RETRO_USING_SDL2
     SDL_Init(SDL_INIT_EVERYTHING);
