@@ -29,7 +29,7 @@ void InitDevMenu()
     SetPaletteEntry(-1, 0xFF, 0xFF, 0xFF, 0xFF);
     stageMode = DEVMENU_MAIN;
     SetupTextMenu(&gameMenu[0], 0);
-    AddTextMenuEntry(&gameMenu[0], "RETRO ENGINE DEV MENU");
+    AddTextMenuEntry(&gameMenu[0], "RETRO ENGINE V3");
     AddTextMenuEntry(&gameMenu[0], " ");
     char version[0x80];
     StrCopy(version, Engine.gameWindowText);
