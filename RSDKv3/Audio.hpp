@@ -22,7 +22,7 @@
 #define TRACK_COUNT   (0x10)
 #define SFX_COUNT     (0x100)
 #define CHANNEL_COUNT (0x4)
-#define SFXDATA_COUNT (0x400000)
+#define SFXDATA_COUNT (0x40000000)
 
 #define MAX_VOLUME (100)
 

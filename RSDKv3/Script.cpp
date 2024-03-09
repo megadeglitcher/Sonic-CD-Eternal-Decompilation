@@ -62,7 +62,7 @@ struct FunctionInfo {
 };
 
 #if RETRO_USE_COMPILER
-const char variableNames[][0x20] = {
+const char variableNames[][0x21] = {
     "TempValue0",
     "TempValue1",
     "TempValue2",
@@ -103,6 +103,15 @@ const char variableNames[][0x20] = {
     "Object.Value5",
     "Object.Value6",
     "Object.Value7",
+    "Object.Value8",
+    "Object.Value9",
+    "Object.Value10",
+    "Object.Value11",
+    "Object.Value12",
+    "Object.Value13",
+    "Object.Value14",
+    "Object.Value15",
+    "Object.Value16",
     "Object.OutOfBounds",
     "Player.State",
     "Player.ControlMode",
@@ -530,6 +539,15 @@ enum ScrVariable {
     VAR_OBJECTVALUE5,
     VAR_OBJECTVALUE6,
     VAR_OBJECTVALUE7,
+    VAR_OBJECTVALUE8,
+    VAR_OBJECTVALUE9,
+    VAR_OBJECTVALUE10,
+    VAR_OBJECTVALUE11,
+    VAR_OBJECTVALUE12,
+    VAR_OBJECTVALUE13,
+    VAR_OBJECTVALUE14,
+    VAR_OBJECTVALUE15,
+    VAR_OBJECTVALUE16,
     VAR_OBJECTOUTOFBOUNDS,
     VAR_PLAYERSTATE,
     VAR_PLAYERCONTROLMODE,
@@ -2344,6 +2362,42 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     }
                     case VAR_OBJECTVALUE7: {
                         scriptEng.operands[i] = objectEntityList[arrayVal].values[7];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE8: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[8];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE9: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[9];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE10: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[10];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE11: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[11];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE12: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[12];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE13: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[13];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE14: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[14];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE15: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[15];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE16: {
+                        scriptEng.operands[i] = objectEntityList[arrayVal].values[16];
                         break;
                     }
                     case VAR_OBJECTOUTOFBOUNDS: {
@@ -4169,6 +4223,42 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     }
                     case VAR_OBJECTVALUE7: {
                         objectEntityList[arrayVal].values[7] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE8: {
+                        objectEntityList[arrayVal].values[8] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE9: {
+                        objectEntityList[arrayVal].values[9] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE10: {
+                        objectEntityList[arrayVal].values[10] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE11: {
+                        objectEntityList[arrayVal].values[11] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE12: {
+                        objectEntityList[arrayVal].values[12] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE13: {
+                        objectEntityList[arrayVal].values[13] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE14: {
+                        objectEntityList[arrayVal].values[14] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE15: {
+                        objectEntityList[arrayVal].values[15] = scriptEng.operands[i];
+                        break;
+                    }
+                    case VAR_OBJECTVALUE16: {
+                        objectEntityList[arrayVal].values[16] = scriptEng.operands[i];
                         break;
                     }
                     case VAR_OBJECTOUTOFBOUNDS: break;

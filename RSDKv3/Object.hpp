@@ -8,7 +8,7 @@
 struct Entity {
     int XPos;
     int YPos;
-    int values[8];
+    int values[17];
     int scale;
     int rotation;
     int animationTimer;
