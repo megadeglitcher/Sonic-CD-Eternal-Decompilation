@@ -2,7 +2,7 @@ name: Build RSDKv3
 on:
   workflow_dispatch:
     branches:
-      - main
+      - master
 
 jobs: 
   v3-windows:
