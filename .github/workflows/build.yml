@@ -13,7 +13,7 @@ env:
   GENERAL_LINUX_FLAGS: "-DCMAKE_CXX_FLAGS='-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0'"
 
 jobs: 
-  v3-windows:
+  eternal-windows:
     runs-on: windows-2022
     steps:
       - name: Checkout
@@ -34,9 +34,9 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: v3-windows
+          name: eternal-windows
           path: artifacts
-  v3-windows-x64:
+  eternal-windows-x64:
     runs-on: windows-2022
     steps:
       - name: Checkout
@@ -57,9 +57,9 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: v3-windows-x64
+          name: eternal-windows-x64
           path: artifacts
-  v3-linux:
+  eternal-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -84,5 +84,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: v3-linux
+          name: v3-eternal
           path: linux.tar.gz
