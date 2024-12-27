@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           vcpkg install glew sdl2 libogg libtheora libvorbis --triplet=x86-windows-static
-      - name: Build Sonic CD Eternal
+      - name: Build Sonic CD Eternal (Plus)
         run: |
           cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}}
           cmake --build build --parallel --config Release
@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: |
           vcpkg install glew sdl2 libogg libtheora libvorbis --triplet=x64-windows-static
-      - name: Build Sonic CD Eternal
+      - name: Build Sonic CD Eternal (Plus)
         run: |
           cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}}
           cmake --build build --parallel --config Release
@@ -70,7 +70,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libglew-dev libglfw3-dev libsdl2-dev libogg-dev libtheora-dev libvorbis-dev
-      - name: Build Sonic CD Eternal
+      - name: Build Sonic CD Eternal (Plus)
         run: |
           cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_LINUX_FLAGS}}
           cmake --build build --parallel
