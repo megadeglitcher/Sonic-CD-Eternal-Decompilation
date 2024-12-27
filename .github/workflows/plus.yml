@@ -1,0 +1,88 @@
+name: Build Sonic CD Eternal (Plus)
+on:
+  workflow_dispatch:
+    branches:
+      - master
+env:
+  GENERAL_FLAGS: "-DCMAKE_BUILD_TYPE=Release"
+  # Normally you would use $VCPKG_INSTALLATION_PATH, but it's broken...so hardcode C:/vcpkg
+  GENERAL_WIN_FLAGS: "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  WIN32_FLAGS: "-DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_PREFIX_PATH=C:/vcpkg/installed/x86-windows-static/ -A Win32"
+  WIN64_FLAGS: "-DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_PREFIX_PATH=C:/vcpkg/installed/x64-windows-static/"
+  # FIXME: For some reason ubuntu enables _FORTIFY_SOURCE by default, so let's override it to prevent IO bugs
+  GENERAL_LINUX_FLAGS: "-DCMAKE_CXX_FLAGS='-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0'"
+
+jobs: 
+  v3-windows:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          vcpkg install glew sdl2 libogg libtheora libvorbis --triplet=x86-windows-static
+      - name: Build Sonic CD Eternal
+        run: |
+          cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}}
+          cmake --build build --parallel --config Release
+      - name: Move artifacts
+        run: |
+          mkdir artifacts
+          mv ./build/Release/*.exe ./artifacts
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-windows
+          path: artifacts
+  v3-windows-x64:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          vcpkg install glew sdl2 libogg libtheora libvorbis --triplet=x64-windows-static
+      - name: Build Sonic CD Eternal
+        run: |
+          cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}}
+          cmake --build build --parallel --config Release
+      - name: Move artifacts
+        run: |
+         mkdir artifacts
+         mv ./build/Release/*.exe ./artifacts
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-windows-x64
+          path: artifacts
+  v3-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libglew-dev libglfw3-dev libsdl2-dev libogg-dev libtheora-dev libvorbis-dev
+      - name: Build Sonic CD Eternal
+        run: |
+          cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_LINUX_FLAGS}}
+          cmake --build build --parallel
+      # tar the executables so that they don't lose exec permissions
+      # see: https://github.com/actions/upload-artifact?tab=readme-ov-file#permission-loss
+      - name: Move artifacts
+        run: |
+          mkdir artifacts
+          mv ./build/RSDKv3* ./artifacts
+          tar -czvf linux.tar.gz -C ./artifacts .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-linux
+          path: linux.tar.gz
