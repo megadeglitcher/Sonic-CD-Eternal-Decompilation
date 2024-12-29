@@ -4,7 +4,11 @@ project(RetroEngine)
 
 set(DECOMP_VERSION 1.0.0)
 
-option(RETRO_FORCE_CASE_INSENSITIVE "Forces case insensivity." OFF)
+if (WIN32)
+	option(RETRO_FORCE_CASE_INSENSITIVE "Forces case insensivity." OFF)
+else()
+	option(RETRO_FORCE_CASE_INSENSITIVE "Forces case insensivity." ON)
+endif()
 option(RETRO_MOD_LOADER "Enables or disables the mod loader." ON)
 option(RETRO_USE_HW_RENDER "Enables usage of Hardware Render as an option." ON)
 option(RETRO_DISABLE_PLUS "Disables Plus. Should be set on for any public releases." OFF)
