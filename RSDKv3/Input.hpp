@@ -9,7 +9,13 @@ enum InputButtons {
     INPUT_BUTTONA,
     INPUT_BUTTONB,
     INPUT_BUTTONC,
+    INPUT_BUTTONX,
+    INPUT_BUTTONY,
+    INPUT_BUTTONZ,
+    INPUT_BUTTONL,
+    INPUT_BUTTONR,
     INPUT_START,
+    INPUT_SELECT,
     INPUT_ANY,
     INPUT_BUTTONCOUNT,
 };
@@ -22,7 +28,13 @@ struct InputData {
     bool A;
     bool B;
     bool C;
+    bool X;
+    bool Y;
+    bool Z;
+    bool L;
+    bool R;
     bool start;
+    bool select;
 };
 
 struct InputButton {

@@ -507,53 +507,47 @@ void ProcessInput()
 
 void CheckKeyPress(InputData *input, byte flags)
 {
-    if (flags & 0x1)
-        input->up = inputDevice[INPUT_UP].press;
-    if (flags & 0x2)
-        input->down = inputDevice[INPUT_DOWN].press;
-    if (flags & 0x4)
-        input->left = inputDevice[INPUT_LEFT].press;
-    if (flags & 0x8)
-        input->right = inputDevice[INPUT_RIGHT].press;
-    if (flags & 0x10)
-        input->A = inputDevice[INPUT_BUTTONA].press;
-    if (flags & 0x20)
-        input->B = inputDevice[INPUT_BUTTONB].press;
-    if (flags & 0x40)
-        input->C = inputDevice[INPUT_BUTTONC].press;
-    if (flags & 0x80)
-        input->start = inputDevice[INPUT_START].press;
-    if (flags & 0x80) {
-        anyPress = inputDevice[INPUT_ANY].press;
-        if (!anyPress) {
-            for (int t = 0; t < touches; ++t) {
-                if (touchDown[t])
-                    anyPress = true;
-            }
+	input->up = inputDevice[INPUT_UP].press;
+	input->down = inputDevice[INPUT_DOWN].press;
+	input->left = inputDevice[INPUT_LEFT].press;
+	input->right = inputDevice[INPUT_RIGHT].press;
+	input->A = inputDevice[INPUT_BUTTONA].press;
+	input->B = inputDevice[INPUT_BUTTONB].press;
+	input->C = inputDevice[INPUT_BUTTONC].press;
+	input->X = inputDevice[INPUT_BUTTONX].press;
+	input->Y = inputDevice[INPUT_BUTTONY].press;
+	input->Z = inputDevice[INPUT_BUTTONZ].press;
+	input->L = inputDevice[INPUT_BUTTONL].press;
+	input->R = inputDevice[INPUT_BUTTONR].press;
+	input->start = inputDevice[INPUT_START].press;
+	input->select = inputDevice[INPUT_SELECT].press;
+    anyPress = inputDevice[INPUT_ANY].press;
+    if (!anyPress) {
+        for (int t = 0; t < touches; ++t) {
+            if (touchDown[t])
+                anyPress = true;
         }
-
-        SetGlobalVariableByName("input.pressButton", anyPress);
     }
+
+    SetGlobalVariableByName("input.pressButton", anyPress);
 }
 
 void CheckKeyDown(InputData *input, byte flags)
 {
-    if (flags & 0x1)
-        input->up = inputDevice[INPUT_UP].hold;
-    if (flags & 0x2)
-        input->down = inputDevice[INPUT_DOWN].hold;
-    if (flags & 0x4)
-        input->left = inputDevice[INPUT_LEFT].hold;
-    if (flags & 0x8)
-        input->right = inputDevice[INPUT_RIGHT].hold;
-    if (flags & 0x10)
-        input->A = inputDevice[INPUT_BUTTONA].hold;
-    if (flags & 0x20)
-        input->B = inputDevice[INPUT_BUTTONB].hold;
-    if (flags & 0x40)
-        input->C = inputDevice[INPUT_BUTTONC].hold;
-    if (flags & 0x80)
-        input->start = inputDevice[INPUT_START].hold;
+    input->up = inputDevice[INPUT_UP].hold;
+    input->down = inputDevice[INPUT_DOWN].hold;
+    input->left = inputDevice[INPUT_LEFT].hold;
+    input->right = inputDevice[INPUT_RIGHT].hold;
+    input->A = inputDevice[INPUT_BUTTONA].hold;
+    input->B = inputDevice[INPUT_BUTTONB].hold;
+    input->C = inputDevice[INPUT_BUTTONC].hold;
+    input->X = inputDevice[INPUT_BUTTONX].hold;
+    input->Y = inputDevice[INPUT_BUTTONY].hold;
+    input->Z = inputDevice[INPUT_BUTTONZ].hold;
+    input->L = inputDevice[INPUT_BUTTONL].hold;
+    input->R = inputDevice[INPUT_BUTTONR].hold;
+    input->start = inputDevice[INPUT_START].hold;
+    input->select = inputDevice[INPUT_SELECT].hold;
 }
 
 #if RETRO_USE_HAPTICS
