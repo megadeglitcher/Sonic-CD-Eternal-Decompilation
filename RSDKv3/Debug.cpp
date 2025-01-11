@@ -396,6 +396,7 @@ void ProcessStageSelect()
                 stageMode         = STAGEMODE_LOAD;
                 Engine.gameMode   = ENGINE_MAINGAME;
                 stageListPosition = gameMenu[1].selection1;
+				SetGlobalVariableByName("Options.GameMode", -1);
             }
             else if (keyPress.B) {
                 SetupTextMenu(&gameMenu[0], 0);
