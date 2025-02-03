@@ -102,17 +102,29 @@ void PlayVideoFile(char *filePath)
         callbacks.userdata = (void *)file;
 #if RETRO_USING_SDL2 && !RETRO_USING_OPENGL
     videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 30, THEORAPLAY_VIDFMT_IYUV, 
-        GetGlobalVariableByName("Options.Soundtrack") == 2 ? 2 : (GetGlobalVariableByName("Options.Soundtrack") ? 1 : 0));
+        GetGlobalVariableByName("Options.Soundtrack") == 4 ? 
+            GetGlobalVariableByName("Options.CustomSoundtrack") :
+        (GetGlobalVariableByName("Options.Soundtrack") == 3 ? 3 :
+        (GetGlobalVariableByName("Options.Soundtrack") == 2 ? 2 :
+        (GetGlobalVariableByName("Options.Soundtrack") == 1 ? 1 : 0))));
 #endif
 
 #if RETRO_USING_SDL1 && !RETRO_USING_OPENGL
     videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 30, THEORAPLAY_VIDFMT_RGBA, 
-        GetGlobalVariableByName("Options.Soundtrack") == 2 ? 2 : (GetGlobalVariableByName("Options.Soundtrack") ? 1 : 0));
+        GetGlobalVariableByName("Options.Soundtrack") == 4 ? 
+            GetGlobalVariableByName("Options.CustomSoundtrack") :
+        (GetGlobalVariableByName("Options.Soundtrack") == 3 ? 3 :
+        (GetGlobalVariableByName("Options.Soundtrack") == 2 ? 2 :
+        (GetGlobalVariableByName("Options.Soundtrack") == 1 ? 1 : 0))));
 #endif
 
 #if RETRO_USING_OPENGL
     videoDecoder = THEORAPLAY_startDecode(&callbacks, /*FPS*/ 30, THEORAPLAY_VIDFMT_RGBA, 
-        GetGlobalVariableByName("Options.Soundtrack") == 2 ? 2 : (GetGlobalVariableByName("Options.Soundtrack") ? 1 : 0));
+        GetGlobalVariableByName("Options.Soundtrack") == 4 ? 
+            GetGlobalVariableByName("Options.CustomSoundtrack") :
+        (GetGlobalVariableByName("Options.Soundtrack") == 3 ? 3 :
+        (GetGlobalVariableByName("Options.Soundtrack") == 2 ? 2 :
+        (GetGlobalVariableByName("Options.Soundtrack") == 1 ? 1 : 0))));
 #endif
 
         if (!videoDecoder) {
