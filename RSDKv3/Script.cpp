@@ -456,6 +456,7 @@ const FunctionInfo functions[] = {
 #if RETRO_USE_HAPTICS
     FunctionInfo("HapticEffect", 4),
 #endif
+    FunctionInfo("GetAchievement", 2),
 };
 
 #if RETRO_USE_COMPILER
@@ -904,6 +905,7 @@ enum ScrFunction {
 #if RETRO_USE_HAPTICS
     FUNC_HAPTICEFFECT,
 #endif
+    FUNC_GETACHIEVEMENT,
     FUNC_MAX_CNT
 };
 
@@ -4105,6 +4107,10 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     PlayHaptics(scriptEng.operands[1], scriptEng.operands[2], scriptEng.operands[3]);
                 break;
 #endif
+            case FUNC_GETACHIEVEMENT:
+                opcodeSize = 0;
+                GetAchievement(scriptEng.operands[0], scriptEng.operands[1]);
+                break;
         }
 
         // Set Values

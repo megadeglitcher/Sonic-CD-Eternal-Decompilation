@@ -1089,6 +1089,12 @@ void SetAchievement(int achievementID, int achievementDone)
         AwardAchievement(achievementID, achievementDone);
     }
 }
+void GetAchievement(int achievementID, int achievementDone)
+{
+    if (!debugMode) {
+        scriptEng.checkResult = (achievements[achievementID].status == achievementDone);
+    }
+}
 void SetLeaderboard(int leaderboardID, int result)
 {
     if (!Engine.trialMode && !debugMode) {

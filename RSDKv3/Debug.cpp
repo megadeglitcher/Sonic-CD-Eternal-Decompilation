@@ -117,6 +117,71 @@ void ProcessStageSelect()
     switch (stageMode) {
         case DEVMENU_MAIN: // Main Menu
         {
+			if (keyPress.L) {
+				
+                SetupTextMenu(&gameMenu[0], 0);
+                AddTextMenuEntry(&gameMenu[0], "EXPERIMENTAL FEATURES");
+                SetupTextMenu(&gameMenu[1], 0);
+                AddTextMenuEntry(&gameMenu[1], "CUSTOM PALETTES:");
+                AddTextMenuEntry(&gameMenu[1], "      LITE MODE:");
+                AddTextMenuEntry(&gameMenu[1], "     WALL PHASE:");
+                AddTextMenuEntry(&gameMenu[1], "     VAPER MODE:");
+                AddTextMenuEntry(&gameMenu[1], "    CASUAL MODE:");
+                gameMenu[0].alignment       = 2;
+                gameMenu[1].alignment       = 2;
+                gameMenu[1].selectionCount  = 1;
+                gameMenu[1].visibleRowCount = 0;
+				gameMenu[1].selection1		= 0;
+				
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], " ");
+				
+				//DifferentPalettes Start
+					if (GetGlobalVariableByName("DifferentPalettes") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("DifferentPalettes") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//DifferentPalettes End
+				
+				//Trial Start
+					if (GetGlobalVariableByName("Engine.TrialMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Engine.TrialMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Trial End
+				
+				//WallPhase Start
+					if (GetGlobalVariableByName("WallPhase") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("WallPhase") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//WallPhase End
+				
+				//Vaper Start
+					if (GetGlobalVariableByName("Options.VaperMode") == 100) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.VaperMode") == 75) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Vaper End
+				
+				//Casual Start
+					if (GetGlobalVariableByName("Options.CasualMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.CasualMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Casual End
+                stageMode                   = DEVMENU_EXPERIMENTAL;
+            }
             if (keyPress.down)
                 gameMenu[0].selection2 += 2;
 
@@ -236,6 +301,142 @@ void ProcessStageSelect()
                 gameMenu[0].alignment  = 0;
                 gameMenu[0].selection2 = 3;
                 stageMode              = DEVMENU_STAGELISTSEL;
+            }
+            else if (keyPress.B) {
+                stageMode = DEVMENU_MAIN;
+                SetupTextMenu(&gameMenu[0], 0);
+                AddTextMenuEntry(&gameMenu[0], "RETRO ENGINE V3");
+                AddTextMenuEntry(&gameMenu[0], " ");
+                char version[0x80];
+                StrCopy(version, Engine.gameWindowText);
+                AddTextMenuEntry(&gameMenu[0], version);
+                AddTextMenuEntry(&gameMenu[0], Engine.gameVersion);
+#ifdef RETRO_DEV_EXTRA
+                AddTextMenuEntry(&gameMenu[0], RETRO_DEV_EXTRA);
+#else
+                AddTextMenuEntry(&gameMenu[0], " ");
+#endif
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], "START GAME");
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], "STAGE SELECT");
+                AddTextMenuEntry(&gameMenu[0], " ");
+#if RETRO_USE_MOD_LOADER
+                AddTextMenuEntry(&gameMenu[0], "MODS");
+                AddTextMenuEntry(&gameMenu[0], " ");
+#endif
+                AddTextMenuEntry(&gameMenu[0], "EXIT GAME");
+                gameMenu[0].alignment        = 2;
+                gameMenu[0].selectionCount   = 2;
+                gameMenu[0].selection1       = 0;
+                gameMenu[0].selection2       = 9;
+                gameMenu[1].visibleRowCount  = 0;
+                gameMenu[1].visibleRowOffset = 0;
+            }
+            break;
+        }
+
+        case DEVMENU_EXPERIMENTAL: // Experimental Features
+        {
+            if (keyPress.down)
+                ++gameMenu[1].selection1;
+            if (keyPress.up)
+                --gameMenu[1].selection1;
+            if (gameMenu[1].selection1 == gameMenu[1].rowCount)
+                gameMenu[1].selection1 = 0;
+
+            if (gameMenu[1].selection1 < 0)
+                gameMenu[1].selection1 = gameMenu[1].rowCount - 1;
+
+            DrawTextMenu(&gameMenu[0], SCREEN_CENTERX - 4, 72);
+            DrawTextMenu(&gameMenu[1], SCREEN_CENTERX - 40, 96);
+            if (keyPress.start || keyPress.A) {
+				if (gameMenu[1].selection1 == 0) {
+					SetGlobalVariableByName("DifferentPalettes", GetGlobalVariableByName("DifferentPalettes") ^ 1);
+				}
+				if (gameMenu[1].selection1 == 1) {
+					SetGlobalVariableByName("Engine.TrialMode", GetGlobalVariableByName("Engine.TrialMode") ^ 1);
+				}
+				if (gameMenu[1].selection1 == 2) {
+					SetGlobalVariableByName("WallPhase", GetGlobalVariableByName("WallPhase") ^ 1);
+				}
+				if (gameMenu[1].selection1 == 3) {
+					SetGlobalVariableByName("Options.VaperMode", GetGlobalVariableByName("Options.VaperMode") ^ 25);
+					SetGlobalVariableByName("Options.VaperMode", GetGlobalVariableByName("Options.VaperMode") + 50);
+					if (GetGlobalVariableByName("Options.VaperMode") > 100) {
+						SetGlobalVariableByName("Options.VaperMode", GetGlobalVariableByName("Options.VaperMode") - 100);
+					}
+					if (GetGlobalVariableByName("Options.VaperMode") < 75) {
+						SetGlobalVariableByName("Options.VaperMode", 100);
+					}
+				}
+				if (gameMenu[1].selection1 == 4) {
+					SetGlobalVariableByName("Options.CasualMode", GetGlobalVariableByName("Options.CasualMode") ^ 1);
+				}
+				
+                SetupTextMenu(&gameMenu[0], 0);
+                AddTextMenuEntry(&gameMenu[0], "EXPERIMENTAL FEATURES");
+                SetupTextMenu(&gameMenu[1], 0);
+                AddTextMenuEntry(&gameMenu[1], "CUSTOM PALETTES:");
+                AddTextMenuEntry(&gameMenu[1], "      LITE MODE:");
+                AddTextMenuEntry(&gameMenu[1], "     WALL PHASE:");
+                AddTextMenuEntry(&gameMenu[1], "     VAPER MODE:");
+                AddTextMenuEntry(&gameMenu[1], "    CASUAL MODE:");
+                gameMenu[0].alignment       = 2;
+                gameMenu[1].alignment       = 2;
+                gameMenu[1].selectionCount  = 1;
+                gameMenu[1].visibleRowCount = 0;
+				
+                AddTextMenuEntry(&gameMenu[0], " ");
+                AddTextMenuEntry(&gameMenu[0], " ");
+				
+				//DifferentPalettes Start
+					if (GetGlobalVariableByName("DifferentPalettes") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("DifferentPalettes") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//DifferentPalettes End
+				
+				//Trial Start
+					if (GetGlobalVariableByName("Engine.TrialMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Engine.TrialMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Trial End
+				
+				//WallPhase Start
+					if (GetGlobalVariableByName("WallPhase") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("WallPhase") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//WallPhase End
+				
+				//Vaper Start
+					if (GetGlobalVariableByName("Options.VaperMode") == 100) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.VaperMode") == 75) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Vaper End
+				
+				//Casual Start
+					if (GetGlobalVariableByName("Options.CasualMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.CasualMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Casual End
             }
             else if (keyPress.B) {
                 stageMode = DEVMENU_MAIN;

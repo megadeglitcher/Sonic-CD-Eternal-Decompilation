@@ -46,6 +46,7 @@ enum DevMenuMenus {
 #if RETRO_USE_MOD_LOADER
     DEVMENU_MODMENU,
 #endif
+    DEVMENU_EXPERIMENTAL,
 };
 
 void InitDevMenu();

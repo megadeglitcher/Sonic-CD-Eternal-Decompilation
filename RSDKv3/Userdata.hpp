@@ -73,6 +73,7 @@ void WriteUserdata();
 
 void AwardAchievement(int id, int status);
 void SetAchievement(int achievementID, int achievementDone);
+void GetAchievement(int achievementID, int achievementDone);
 void SetLeaderboard(int leaderboardID, int result);
 inline void LoadAchievementsMenu() { ReadUserdata(); }
 inline void LoadLeaderboardsMenu() { ReadUserdata(); }

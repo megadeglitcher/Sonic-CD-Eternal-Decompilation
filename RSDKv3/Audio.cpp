@@ -587,17 +587,11 @@ void LoadMusic()
 			
 #if RETRO_USING_SDL2
 			int VaperMode = GetGlobalVariableByName("Options.VaperMode");
-			
-			if (VaperMode == 0) {
-			strmInfo->stream = SDL_NewAudioStream(AUDIO_S16, strmInfo->vorbisFile.vi->channels, (int)strmInfo->vorbisFile.vi->rate,
-												  audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq);
-			}
-			
-			if (VaperMode == 1) {
-			float adjustedFreq = strmInfo->vorbisFile.vi->rate * 0.75f;
+			float speedFactor = VaperMode / 100.0f; // Convert percentage to a multiplier
+			float adjustedFreq = strmInfo->vorbisFile.vi->rate * speedFactor;
+
 			strmInfo->stream = SDL_NewAudioStream(AUDIO_S16, strmInfo->vorbisFile.vi->channels, (int)adjustedFreq,
-												  audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq);
-			}
+												 audioDeviceFormat.format, audioDeviceFormat.channels, audioDeviceFormat.freq);
 
             if (!strmInfo->stream) {
                 PrintLog("Failed to create stream: %s", SDL_GetError());
