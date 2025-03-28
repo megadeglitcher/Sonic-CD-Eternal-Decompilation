@@ -166,6 +166,8 @@ jobs:
     steps: 
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
     
       - name: Release Eternal (Android)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Android' }}
