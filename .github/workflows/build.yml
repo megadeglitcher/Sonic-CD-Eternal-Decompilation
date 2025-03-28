@@ -13,6 +13,9 @@ on:
         - Android
         - Windows (x86)
         - All
+      create_release:
+        required: true
+        type: boolean
     branches:
       - master
 env:
@@ -155,3 +158,69 @@ jobs:
         with:
           name: eternal-android
           path: ./android/app/build/outputs/apk
+  release-builds:
+    name: Release Eternal (Android)
+    if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Android' }}
+    runs-on: ubuntu-22.04
+    needs: ['eternal-android', 'eternal-win', 'eternal-win-x64', 'eternal-linux']
+    steps: 
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Build Output
+          path: ./artifacts
+
+      - name: Release Eternal (Android)
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Android)" \
+              --generate-notes
+              ./artifacts/*.apk
+      - name: Release Eternal (Windows x86)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Windows x86)" \
+              --generate-notes
+              ./artifacts/eternal-win/*.exe
+      - name: Release Eternal (Windows x64)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x64)' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Windows x64)" \
+              --generate-notes
+              ./artifacts/eternal-win-x64/*.exe
+      - name: Release Eternal (Linux)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Linux' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Linux)" \
+              --generate-notes
+              ./artifacts/eternal-linux/linux.tar.gz
+      - name: Release Eternal (All)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'All' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (All)" \
+              --generate-notes
+              ./artifacts/*
