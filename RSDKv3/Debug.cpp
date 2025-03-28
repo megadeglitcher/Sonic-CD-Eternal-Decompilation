@@ -127,6 +127,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], "     WALL PHASE:");
                 AddTextMenuEntry(&gameMenu[1], "     VAPER MODE:");
                 AddTextMenuEntry(&gameMenu[1], "    CASUAL MODE:");
+                AddTextMenuEntry(&gameMenu[1], "  SS MANUAL RUN:");
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
                 gameMenu[1].selectionCount  = 1;
@@ -180,6 +181,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//Casual End
+				
+				//SS Start
+					if (GetGlobalVariableByName("Options.ManualMovement") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.ManualMovement") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//SS End
                 stageMode                   = DEVMENU_EXPERIMENTAL;
             }
             if (keyPress.down)
@@ -376,6 +386,9 @@ void ProcessStageSelect()
 				if (gameMenu[1].selection1 == 4) {
 					SetGlobalVariableByName("Options.CasualMode", GetGlobalVariableByName("Options.CasualMode") ^ 1);
 				}
+				if (gameMenu[1].selection1 == 5) {
+					SetGlobalVariableByName("Options.ManualMovement", GetGlobalVariableByName("Options.ManualMovement") ^ 1);
+				}
 				
                 SetupTextMenu(&gameMenu[0], 0);
                 AddTextMenuEntry(&gameMenu[0], "EXPERIMENTAL FEATURES");
@@ -385,6 +398,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], "     WALL PHASE:");
                 AddTextMenuEntry(&gameMenu[1], "     VAPER MODE:");
                 AddTextMenuEntry(&gameMenu[1], "    CASUAL MODE:");
+                AddTextMenuEntry(&gameMenu[1], "  SS MANUAL RUN:");
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
                 gameMenu[1].selectionCount  = 1;
@@ -437,6 +451,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//Casual End
+				
+				//SS Start
+					if (GetGlobalVariableByName("Options.ManualMovement") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.ManualMovement") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//SS End
             }
             else if (keyPress.B) {
                 stageMode = DEVMENU_MAIN;
