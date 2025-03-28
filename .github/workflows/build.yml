@@ -14,6 +14,7 @@ on:
         - Windows (x86)
         - All
       create_release:
+        description: Create a release?
         required: true
         type: boolean
     branches:
