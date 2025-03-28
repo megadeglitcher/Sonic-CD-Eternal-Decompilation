@@ -112,7 +112,50 @@ void ProcessStageSelect()
     DrawSprite(32, 0x42, 16, 16, 78, 240, textMenuSurfaceNo);
     DrawSprite(32, 0xB2, 16, 16, 95, 240, textMenuSurfaceNo);
     DrawSprite(SCREEN_XSIZE - 32, SCREEN_YSIZE - 32, 16, 16, 112, 240, textMenuSurfaceNo);
-    //#endif
+    
+
+    if (!keyDown.start && !keyDown.up && !keyDown.down) {
+        int tFlags = touchFlags;
+        touchFlags = 0;
+
+        for (int t = 0; t < touches; ++t) {
+            if (touchDown[t]) {
+                if (touchX[t] < SCREEN_CENTERX) {
+                    if (touchY[t] >= SCREEN_CENTERY) {
+                        if (!(tFlags & 2))
+                            keyPress.down = true;
+                        else
+                            touchFlags |= 1 << 1;
+                    }
+                    else {
+                        if (!(tFlags & 1))
+                            keyPress.up = true;
+                        else
+                            touchFlags |= 1 << 0;
+                    }
+                }
+                else if (touchX[t] > SCREEN_CENTERX) {
+                    if (touchY[t] > SCREEN_CENTERY) {
+                        if (!(tFlags & 4))
+                            keyPress.start = true;
+                        else
+                            touchFlags |= 1 << 2;
+                    }
+                    else {
+                        if (!(tFlags & 8))
+                            keyPress.B = true;
+                        else
+                            touchFlags |= 1 << 3;
+                    }
+                }
+            }
+        }
+
+        touchFlags |= (int)keyPress.up << 0;
+        touchFlags |= (int)keyPress.down << 1;
+        touchFlags |= (int)keyPress.start << 2;
+        touchFlags |= (int)keyPress.B << 3;
+    }
 
     switch (stageMode) {
         case DEVMENU_MAIN: // Main Menu
