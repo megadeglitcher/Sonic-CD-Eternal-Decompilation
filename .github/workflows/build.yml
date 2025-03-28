@@ -160,7 +160,7 @@ jobs:
           name: eternal-android
           path: ./android/app/build/outputs/apk
   release-builds:
-    name: Release Eternal (Android)
+    name: Release Eternal
     runs-on: ubuntu-22.04
     needs: ['eternal-android', 'eternal-win', 'eternal-win-x64', 'eternal-linux']
     steps: 
@@ -173,7 +173,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
         run: |
-            gh release create "$tag" \
+            gh release create "$GITHUB_SHA" \
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Android)" \
               --generate-notes
@@ -184,7 +184,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
         run: |
-            gh release create "$tag" \
+            gh release create "$GITHUB_SHA" \
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Windows x86)" \
               --generate-notes
@@ -195,7 +195,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
         run: |
-            gh release create "$tag" \
+            gh release create "$GITHUB_SHA" \
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Windows x64)" \
               --generate-notes
@@ -206,7 +206,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
         run: |
-            gh release create "$tag" \
+            gh release create "$GITHUB_SHA" \
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Linux)" \
               --generate-notes
@@ -217,7 +217,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
         run: |
-            gh release create "$tag" \
+            gh release create "$GITHUB_SHA" \
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (All)" \
               --generate-notes
