@@ -170,6 +170,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+          merge-multiple: true
       - name: Release Eternal (Android)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Android' }}
         env: 
@@ -213,7 +214,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Linux)" \
               --generate-notes \
-              ./artifacts/eternal-linux/linux.tar.gz
+              ./artifacts/linux.tar.gz
       - name: Release Eternal (All)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'All' }}
         env: 
