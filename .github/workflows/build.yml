@@ -51,6 +51,8 @@ jobs:
         run: |
           mkdir artifacts
           mv ./build/Release/*.exe ./artifacts
+          mv ./build/Release/*.dll ./artifacts
+          mv ./build/Release/*.ini ./artifacts
           Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x86.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -76,6 +78,8 @@ jobs:
         run: |
          mkdir artifacts
          mv ./build/Release/*.exe ./artifacts
+         mv ./build/Release/*.dll ./artifacts
+         mv ./build/Release/*.ini ./artifacts
          Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x64.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -161,7 +165,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eternal-android
-          path: ./artifacts/*.apk
+          path: ./artifacts
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
@@ -182,7 +186,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Android)" \
               --generate-notes \
-              ./artifacts/eternal-android.zip
+              ./artifacts/*.apk
       - name: Release Eternal (Windows x86)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
         env: 
@@ -224,6 +228,6 @@ jobs:
         run: |
             gh release create "$(date '+%Y-%m-%d')" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="Sonic CD Eternal (All)" \
+              --title="Sonic CD Eternal" \
               --generate-notes \
               ./artifacts/*
