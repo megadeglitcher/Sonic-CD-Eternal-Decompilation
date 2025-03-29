@@ -14,7 +14,7 @@ on:
         - Windows (x86)
         - All
       create_release:
-        description: Create a release?
+        description: Create Release?
         required: true
         type: boolean
     branches:
@@ -51,6 +51,7 @@ jobs:
         run: |
           mkdir artifacts
           mv ./build/Release/*.exe ./artifacts
+          Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x86.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -75,6 +76,7 @@ jobs:
         run: |
          mkdir artifacts
          mv ./build/Release/*.exe ./artifacts
+         Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x64.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -167,8 +169,9 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          path: ./artifacts
-    
+          path: |
+            ./artifacts
+            ./android/app/build/outputs/apk
       - name: Release Eternal (Android)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Android' }}
         env: 
@@ -179,7 +182,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Android)" \
               --generate-notes \
-              ./artifacts/*.apk
+              ./android/app/build/outputs/apk/*.apk
       - name: Release Eternal (Windows x86)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
         env: 
@@ -190,7 +193,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Windows x86)" \
               --generate-notes \
-              ./artifacts/eternal-win/*.exe
+              ./artifacts/eternal-win-x86.zip
       - name: Release Eternal (Windows x64)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x64)' }}
         env: 
@@ -201,7 +204,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Windows x64)" \
               --generate-notes \
-              ./artifacts/eternal-win-x64/*.exe
+              ./artifacts/eternal-win-x64.zip
       - name: Release Eternal (Linux)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Linux' }}
         env: 
@@ -223,4 +226,5 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (All)" \
               --generate-notes \
-              ./artifacts/*
+              ./artifacts/* \
+              ./android/app/build/outputs/apk/*.apk
