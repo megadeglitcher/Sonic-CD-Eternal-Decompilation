@@ -164,7 +164,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eternal-android
-          path: ./android/app/build/outputs/apk
+          path: ./app/build/outputs/apk
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
@@ -234,6 +234,6 @@ jobs:
               --title="Sonic CD Eternal" \
               --generate-notes \
               ./artifacts/linux.tar.gz
-              ./android/app/build/outputs/apk/*.apk
+              ./android/app/build/outputs/apk/**/*.apk
               ./artifacts/eternal-win-x86.zip
               ./artifacts/eternal-win-x64.zip
