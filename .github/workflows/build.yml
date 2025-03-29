@@ -107,7 +107,7 @@ jobs:
       - name: Move artifacts
         run: |
           mkdir artifacts
-          mv ./build/RSDKv3* ./artifacts
+          mv ./build/"CD Eternal"* ./artifacts
           tar -czvf linux.tar.gz -C ./artifacts .
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
