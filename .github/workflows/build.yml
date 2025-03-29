@@ -160,12 +160,11 @@ jobs:
         working-directory: ./android
         run: |
           ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS
-          mv ./app/build/outputs/apk/*.apk ./artifacts
       - name: Upload artifact Android
         uses: actions/upload-artifact@v4
         with:
           name: eternal-android
-          path: ./artifacts
+          path: ./android/app/build/outputs/apk
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
@@ -186,7 +185,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Android)" \
               --generate-notes \
-              ./artifacts/*.apk
+              ./android/app/build/outputs/apk/*.apk
       - name: Release Eternal (Windows x86)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
         env: 
