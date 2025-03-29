@@ -165,6 +165,9 @@ jobs:
         with:
           name: eternal-android
           path: ./app/build/outputs/apk
+      - name: Move APK to artifacts
+        run: |
+          Copy-Item -Path ./android/app/build/outputs/apk/*.apk -Destination ./artifacts
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
@@ -175,10 +178,6 @@ jobs:
         with:
           path: ./artifacts
           merge-multiple: true
-      - name: Download Build Artifact (x2)
-        uses: actions/download-artifact@v4
-        with:
-          path: ./android/app/build/outputs/apk
       - name: Release Eternal (Android)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Android' }}
         env: 
@@ -189,7 +188,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Android)" \
               --generate-notes \
-              ./android/app/build/outputs/apk/*.apk
+              ./artifacts/*.apk
       - name: Release Eternal (Windows x86)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
         env: 
@@ -234,6 +233,6 @@ jobs:
               --title="Sonic CD Eternal" \
               --generate-notes \
               ./artifacts/linux.tar.gz
-              ./app/build/outputs/apk/**/*.apk
+              ./artifacts/*.apk
               ./artifacts/eternal-win-x86.zip
               ./artifacts/eternal-win-x64.zip
