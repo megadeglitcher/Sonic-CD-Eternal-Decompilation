@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eternal-win
-          path: artifacts
+          path: eternal-win-x86.zip
   eternal-win-x64:
     if: ${{ github.event.inputs.platform == 'Windows (x64)' || github.event.inputs.platform == 'All' }}  
     runs-on: windows-2022
@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eternal-win-x64
-          path: artifacts
+          path: eternal-win-x64.zip
   eternal-linux:
     if: ${{ github.event.inputs.platform == 'Linux' || github.event.inputs.platform == 'All' }}  
     runs-on: ubuntu-latest
@@ -156,11 +156,12 @@ jobs:
         working-directory: ./android
         run: |
           ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS
+          mv ./android/app/build/outputs/apk/debug/*.apk ./artifacts
       - name: Upload artifact Android
         uses: actions/upload-artifact@v4
         with:
           name: eternal-android
-          path: ./artifacts
+          path: ./android/app/build/outputs/apk
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
