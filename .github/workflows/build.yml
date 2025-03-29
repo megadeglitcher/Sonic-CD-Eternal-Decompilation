@@ -1,6 +1,22 @@
 name: Build Sonic CD Eternal
 on:
   workflow_dispatch:
+    inputs: 
+      platform: 
+        required: true
+        default: 'Windows (x64)'
+        description: Platform
+        type: choice
+        options:
+        - Windows (x64)
+        - Linux
+        - Android
+        - Windows (x86)
+        - All
+      create_release:
+        description: Create Release?
+        required: true
+        type: boolean
     branches:
       - master
 env:
@@ -12,8 +28,12 @@ env:
   # FIXME: For some reason ubuntu enables _FORTIFY_SOURCE by default, so let's override it to prevent IO bugs
   GENERAL_LINUX_FLAGS: "-DCMAKE_CXX_FLAGS='-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0' -DRETRO_FORCE_CASE_INSENSITIVE=on"
 
+permissions:
+  contents: write
+
 jobs: 
   eternal-win:
+    if: ${{ github.event.inputs.platform == 'Windows (x86)' || github.event.inputs.platform == 'All' }}   
     runs-on: windows-2022
     steps:
       - name: Checkout
@@ -31,12 +51,16 @@ jobs:
         run: |
           mkdir artifacts
           mv ./build/Release/*.exe ./artifacts
+          mv ./build/Release/*.dll ./artifacts
+          mv ./build/Release/*.ini ./artifacts
+          Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x86.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: eternal-win
-          path: artifacts
+          path: eternal-win-x86.zip
   eternal-win-x64:
+    if: ${{ github.event.inputs.platform == 'Windows (x64)' || github.event.inputs.platform == 'All' }}  
     runs-on: windows-2022
     steps:
       - name: Checkout
@@ -54,12 +78,16 @@ jobs:
         run: |
          mkdir artifacts
          mv ./build/Release/*.exe ./artifacts
+         mv ./build/Release/*.dll ./artifacts
+         mv ./build/Release/*.ini ./artifacts
+         Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x64.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: eternal-win-x64
-          path: artifacts
+          path: eternal-win-x64.zip
   eternal-linux:
+    if: ${{ github.event.inputs.platform == 'Linux' || github.event.inputs.platform == 'All' }}  
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -86,3 +114,120 @@ jobs:
         with:
           name: eternal-linux
           path: linux.tar.gz
+  eternal-android:
+      if: ${{ github.event.inputs.platform == 'Android' || github.event.inputs.platform == 'All' }}  
+      runs-on: windows-latest
+      steps:
+      - name: Checkout repository Android
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Download libogg, libvorbis, and libtheora for easier includes
+        run: |
+          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.7.zip" -OutFile "libvorbis.zip"
+          Expand-Archive -Path libvorbis.zip -DestinationPath ./dependencies/android/
+          Rename-Item ./dependencies/android/libvorbis-1.3.7 libvorbis
+          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.zip" -OutFile "libogg.zip"
+          Expand-Archive -Path libogg.zip -DestinationPath ./dependencies/android/app/jni/src/dependencies/android/
+          Rename-Item ./dependencies/android/app/jni/src/dependencies/android/libogg-1.3.5 libogg
+          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/theora/libtheora-1.1.1.zip" -OutFile "libtheora.zip"
+          Expand-Archive -Path libtheora.zip -DestinationPath ./dependencies/android
+          Rename-Item ./dependencies/android/libtheora-1.1.1 libtheora
+      - name: Download GLEW
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
+          Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/android/
+          Rename-Item ./dependencies/android/glew-2.2.0 glew
+      - name: Download SDL2
+        run: |
+          Invoke-WebRequest -Uri "https://libsdl.org/release/SDL2-2.28.3.zip" -OutFile "SDL2.zip"
+          Expand-Archive -Path SDL2.zip -DestinationPath ./android/app/jni/
+          Rename-Item ./android/app/jni/SDL2-2.28.3 SDL
+      - name: Move & Copy stuff
+        run: |
+          Copy-Item -Path ./dependencies/all/theoraplay -Destination ./dependencies/android/app/jni/src/dependencies/android/
+          Copy-Item -Path ./dependencies/android/app/jni/src/dependencies/android\* -Destination ./dependencies/
+          Copy-Item -Path ./dependencies/android/app/jni/src/dependencies/android/libogg/ -Destination ./dependencies/android/ -recurse
+          Copy-Item -Path ./dependencies/android/config_types.h -Destination ./dependencies/android/libogg/include/ogg/
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: 11
+      - name: Build Eternal (Android)
+        working-directory: ./android
+        run: |
+          ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS
+          mv ./app/build/outputs/apk/*.apk ./artifacts
+      - name: Upload artifact Android
+        uses: actions/upload-artifact@v4
+        with:
+          name: eternal-android
+          path: ./artifacts
+  release-builds:
+    name: Release Eternal
+    runs-on: ubuntu-22.04
+    needs: ['eternal-android', 'eternal-win', 'eternal-win-x64', 'eternal-linux']
+    steps: 
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+          merge-multiple: true
+      - name: Release Eternal (Android)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Android' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$(date '+%Y-%m-%d')" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Android)" \
+              --generate-notes \
+              ./artifacts/*.apk
+      - name: Release Eternal (Windows x86)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$(date '+%Y-%m-%d')" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Windows x86)" \
+              --generate-notes \
+              ./artifacts/eternal-win-x86.zip
+      - name: Release Eternal (Windows x64)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x64)' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$(date '+%Y-%m-%d')" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Windows x64)" \
+              --generate-notes \
+              ./artifacts/eternal-win-x64.zip
+      - name: Release Eternal (Linux)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Linux' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$(date '+%Y-%m-%d')" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal (Linux)" \
+              --generate-notes \
+              ./artifacts/linux.tar.gz
+      - name: Release Eternal (All)
+        if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'All' }}
+        env: 
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+        run: |
+            gh release create "$(date '+%Y-%m-%d')" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Sonic CD Eternal" \
+              --generate-notes \
+              ./artifacts/*
