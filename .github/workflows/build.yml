@@ -226,5 +226,5 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (All)" \
               --generate-notes \
-              ./artifacts/* \
+              ./artifacts/ \
               ./android/app/build/outputs/apk/*.apk
