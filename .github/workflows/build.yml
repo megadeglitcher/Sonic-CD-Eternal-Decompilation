@@ -234,6 +234,6 @@ jobs:
               --title="Sonic CD Eternal" \
               --generate-notes \
               ./artifacts/linux.tar.gz
-              ./android/app/build/outputs/apk/**/*.apk
+              ./app/build/outputs/apk/**/*.apk
               ./artifacts/eternal-win-x86.zip
               ./artifacts/eternal-win-x64.zip
