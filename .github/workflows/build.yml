@@ -167,7 +167,7 @@ jobs:
           path: ./app/build/outputs/apk
       - name: Move APK to artifacts
         run: |
-          Copy-Item -Path ./android/app/build/outputs/apk/*.apk -Destination ./artifacts
+          Copy-Item -Path ./app/build/outputs/apk/*.apk -Destination ./artifacts
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
