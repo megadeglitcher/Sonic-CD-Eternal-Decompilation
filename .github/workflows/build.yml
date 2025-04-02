@@ -170,6 +170,7 @@ jobs:
           Copy-Item -Path ./android/app/build/outputs/apk/*.apk -Destination ./artifacts
   release-builds:
     name: Release Eternal
+    if: ${{ github.event.inputs.create_release == 'true' }}
     runs-on: ubuntu-22.04
     needs: ['eternal-android', 'eternal-win', 'eternal-win-x64', 'eternal-linux']
     steps: 
@@ -232,7 +233,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal" \
               --generate-notes \
-              ./artifacts/linux.tar.gz
-              ./artifacts/*.apk
-              ./artifacts/eternal-win-x86.zip
-              ./artifacts/eternal-win-x64.zip
+              ./artifacts/linux.tar.gz \
+              ./artifacts/*.apk \
+              ./artifacts/eternal-win-x86.zip \
+              ./artifacts/eternal-win-x64.zip 
