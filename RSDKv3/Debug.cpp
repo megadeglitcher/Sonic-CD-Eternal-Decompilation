@@ -171,6 +171,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], "     VAPER MODE:");
                 AddTextMenuEntry(&gameMenu[1], "    CASUAL MODE:");
                 AddTextMenuEntry(&gameMenu[1], "  SS MANUAL RUN:");
+                AddTextMenuEntry(&gameMenu[1], " PLAYABLE METAL:");
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
                 gameMenu[1].selectionCount  = 1;
@@ -233,7 +234,17 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//SS End
+				
+				//METAL Start
+					if (GetGlobalVariableByName("Options.PlayableMetal") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.PlayableMetal") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//METAL End
                 stageMode                   = DEVMENU_EXPERIMENTAL;
+                gameMenu[0].selection2      = 32;
             }
             if (keyPress.down)
                 gameMenu[0].selection2 += 2;
@@ -394,6 +405,7 @@ void ProcessStageSelect()
 
         case DEVMENU_EXPERIMENTAL: // Experimental Features
         {
+            gameMenu[0].selection2      = 32;
             if (keyPress.down)
                 ++gameMenu[1].selection1;
             if (keyPress.up)
@@ -432,6 +444,9 @@ void ProcessStageSelect()
 				if (gameMenu[1].selection1 == 5) {
 					SetGlobalVariableByName("Options.ManualMovement", GetGlobalVariableByName("Options.ManualMovement") ^ 1);
 				}
+				if (gameMenu[1].selection1 == 6) {
+					SetGlobalVariableByName("Options.PlayableMetal", GetGlobalVariableByName("Options.PlayableMetal") ^ 1);
+				}
 				
                 SetupTextMenu(&gameMenu[0], 0);
                 AddTextMenuEntry(&gameMenu[0], "EXPERIMENTAL FEATURES");
@@ -442,6 +457,8 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], "     VAPER MODE:");
                 AddTextMenuEntry(&gameMenu[1], "    CASUAL MODE:");
                 AddTextMenuEntry(&gameMenu[1], "  SS MANUAL RUN:");
+                AddTextMenuEntry(&gameMenu[1], " PLAYABLE METAL:");
+                gameMenu[0].selection2      = 32;
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
                 gameMenu[1].selectionCount  = 1;
@@ -503,6 +520,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//SS End
+				
+				//METAL Start
+					if (GetGlobalVariableByName("Options.PlayableMetal") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.PlayableMetal") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//METAL End
             }
             else if (keyPress.B) {
                 stageMode = DEVMENU_MAIN;
