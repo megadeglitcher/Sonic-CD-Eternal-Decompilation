@@ -173,12 +173,12 @@ jobs:
     runs-on: ubuntu-22.04
     needs: ['eternal-android', 'eternal-win', 'eternal-win-x64', 'eternal-linux']
     if: |
-      always() && (
-        (inputs.platform == 'Android' && success('eternal-android')) ||
-        (inputs.platform == 'Windows (x86)' && success('eternal-win')) ||
-        (inputs.platform == 'Windows (x64)' && success('eternal-win-x64')) ||
-        (inputs.platform == 'Linux' && success('eternal-linux'))
-      )
+     always() && (
+      (inputs.platform == 'Android' && success('eternal-android')) ||
+      (inputs.platform == 'Windows (x86)' && success('eternal-win')) ||
+      (inputs.platform == 'Windows (x64)' && success('eternal-win-x64')) ||
+      (inputs.platform == 'Linux' && success('eternal-linux'))
+     )
     steps:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
