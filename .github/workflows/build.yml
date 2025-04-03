@@ -170,10 +170,16 @@ jobs:
           Copy-Item -Path ./android/app/build/outputs/apk/*.apk -Destination ./artifacts
   release-builds:
     name: Release Eternal
-    if: ${{ github.event.inputs.create_release == 'true' }}
     runs-on: ubuntu-22.04
     needs: ['eternal-android', 'eternal-win', 'eternal-win-x64', 'eternal-linux']
-    steps: 
+    if: |
+      always() && (
+        (inputs.platform == 'Android' && success('eternal-android')) ||
+        (inputs.platform == 'Windows (x86)' && success('eternal-win')) ||
+        (inputs.platform == 'Windows (x64)' && success('eternal-win-x64')) ||
+        (inputs.platform == 'Linux' && success('eternal-linux'))
+      )
+    steps:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
