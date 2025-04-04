@@ -49,11 +49,11 @@ jobs:
           cmake --build build --parallel --config Release
       - name: Move artifacts
         run: |
-          mkdir artifacts
-          mv ./build/Release/*.exe ./artifacts
-          mv ./build/Release/*.dll ./artifacts
-          mv ./build/Release/*.ini ./artifacts
-          Compress-Archive -Path .\artifacts\* -DestinationPath eternal-win-x86.zip
+         mkdir artifacts
+         Copy-Item -Path ./build/Release/*.exe -Destination ./artifacts
+         Copy-Item -Path ./build/Release/*.dll -Destination ./artifacts
+         Copy-Item -Path ./build/Release/*.ini -Destination ./artifacts
+         Compress-Archive -Path ./artifacts/* -DestinationPath eternal-win-x86.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
