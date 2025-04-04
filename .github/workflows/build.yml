@@ -50,10 +50,8 @@ jobs:
       - name: Move artifacts
         run: |
          mkdir artifacts
-         Copy-Item -Path ./build/Release/*.exe -Destination ./artifacts
-         Copy-Item -Path ./build/Release/*.dll -Destination ./artifacts
-         Copy-Item -Path ./build/Release/*.ini -Destination ./artifacts
-         Compress-Archive -Path ./artifacts/* -DestinationPath eternal-win-x86.zip
+         Copy-Item -Path ./build/Release/* -Destination ./artifacts
+         Compress-Archive -Path ./artifacts/*.* -DestinationPath eternal-win-x86.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -88,10 +86,8 @@ jobs:
       - name: Move artifacts
         run: |
          mkdir artifacts
-         Copy-Item -Path ./build/Release/*.exe -Destination ./artifacts
-         Copy-Item -Path ./build/Release/*.dll -Destination ./artifacts
-         Copy-Item -Path ./build/Release/*.ini -Destination ./artifacts
-         Compress-Archive -Path ./artifacts/* -DestinationPath eternal-win-x64.zip
+         Copy-Item -Path ./build/Release/* -Destination ./artifacts
+         Compress-Archive -Path ./artifacts/*.* -DestinationPath eternal-win-x64.zip
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -195,7 +191,7 @@ jobs:
           ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS
       - name: Move APK to artifacts
         run: |
-          Copy-Item -Path ./android/app/build/outputs/apk/*.apk -Destination ./artifacts
+          Copy-Item -Path ./android/app/build/outputs/apk/* -Destination ./artifacts
       - name: Upload artifact Android
         uses: actions/upload-artifact@v4
         with:
