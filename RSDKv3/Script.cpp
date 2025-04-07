@@ -457,6 +457,7 @@ const FunctionInfo functions[] = {
     FunctionInfo("HapticEffect", 4),
 #endif
     FunctionInfo("GetAchievement", 2),
+    FunctionInfo("SetScreenWidth", 2),
 };
 
 #if RETRO_USE_COMPILER
@@ -906,6 +907,7 @@ enum ScrFunction {
     FUNC_HAPTICEFFECT,
 #endif
     FUNC_GETACHIEVEMENT,
+    FUNC_SETSCREENWIDTH,
     FUNC_MAX_CNT
 };
 
@@ -4110,6 +4112,10 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
             case FUNC_GETACHIEVEMENT:
                 opcodeSize = 0;
                 GetAchievement(scriptEng.operands[0], scriptEng.operands[1]);
+                break;
+            case FUNC_SETSCREENWIDTH:
+                opcodeSize = 0;
+                SetScreenWidth(scriptEng.operands[0], scriptEng.operands[1]);
                 break;
         }
 

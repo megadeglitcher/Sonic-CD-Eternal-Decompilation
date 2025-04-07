@@ -77,5 +77,6 @@ void GetAchievement(int achievementID, int achievementDone);
 void SetLeaderboard(int leaderboardID, int result);
 inline void LoadAchievementsMenu() { ReadUserdata(); }
 inline void LoadLeaderboardsMenu() { ReadUserdata(); }
+void SetScreenWidth(int width, int unused);
 
 #endif //! USERDATA_H

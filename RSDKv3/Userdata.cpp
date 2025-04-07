@@ -1095,6 +1095,19 @@ void GetAchievement(int achievementID, int achievementDone)
         scriptEng.checkResult = (achievements[achievementID].status == achievementDone);
     }
 }
+
+void SetScreenWidth(int width, int unused)
+{
+    if (!width)
+        return;
+
+    SCREEN_XSIZE_CONFIG = width;
+    SCREEN_XSIZE  = SCREEN_XSIZE_CONFIG;
+
+    ReleaseRenderDevice();
+    InitRenderDevice();
+}
+
 void SetLeaderboard(int leaderboardID, int result)
 {
     if (!Engine.trialMode && !debugMode) {
