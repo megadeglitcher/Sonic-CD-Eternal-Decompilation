@@ -140,7 +140,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Linux)" \
               --generate-notes \
-              ./artifacts/linux.tar.gz
+              ./artifacts/eternal-linux
   eternal-android:
       if: ${{ github.event.inputs.platform == 'Android' || github.event.inputs.platform == 'All' }}  
       runs-on: windows-latest
@@ -226,7 +226,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal" \
               --generate-notes \
-              ./artifacts/linux.tar.gz \
+              ./artifacts/eternal-linux \
               ./artifacts/*.apk \
               ./artifacts/eternal-win \
               ./artifacts/eternal-win-x64 
