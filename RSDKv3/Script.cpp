@@ -4651,9 +4651,15 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     case VAR_SCREENCAMERATARGET: cameraTarget = scriptEng.operands[i]; break;
                     case VAR_SCREENCAMERASTYLE: cameraStyle = scriptEng.operands[i]; break;
                     case VAR_SCREENDRAWLISTSIZE: drawListEntries[arrayVal].listSize = scriptEng.operands[i]; break;
-                    case VAR_SCREENCENTERX: SetScreenWidth(scriptEng.operands[i]*2, 0); break;
+                    case VAR_SCREENCENTERX: 
+                    	if (scriptEng.operands[i]*2 != SCREEN_XSIZE)
+                    		SetScreenWidth(scriptEng.operands[i]*2, 0);
+                    	break;
                     case VAR_SCREENCENTERY: break;
-                    case VAR_SCREENXSIZE: SetScreenWidth(scriptEng.operands[i], 0); break;
+                    case VAR_SCREENXSIZE: 
+                    	if (scriptEng.operands[i] != SCREEN_XSIZE)
+                    		SetScreenWidth(scriptEng.operands[i], 0);
+                    	break;
                     case VAR_SCREENYSIZE: break;
                     case VAR_SCREENXOFFSET:
                         xScrollOffset = scriptEng.operands[i];
