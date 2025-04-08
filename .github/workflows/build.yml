@@ -229,5 +229,5 @@ jobs:
               --generate-notes \
               ./artifacts/linux.tar.gz \
               ./artifacts/*.apk \
-              ./artifacts/eternal-win-x86.zip \
+              ./artifacts/eternal-win.zip \
               ./artifacts/eternal-win-x64.zip 
