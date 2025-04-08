@@ -50,13 +50,12 @@ jobs:
       - name: Move artifacts
         run: |
          mkdir artifacts
-         Copy-Item -Path ./build/Release/* -Destination ./artifacts
-         Compress-Archive -Path ./artifacts/*.* -DestinationPath eternal-win-x86.zip
+         mv ./build/Release/*.exe ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: eternal-win
-          path: eternal-win-x86.zip
+          path: artifacts
       - name: Release Eternal (Windows x86)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x86)' }}
         env: 
@@ -67,7 +66,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Windows x86)" \
               --generate-notes \
-              ./artifacts/eternal-win-x86.zip
+              ./artifacts/
   eternal-win-x64:
     if: ${{ github.event.inputs.platform == 'Windows (x64)' || github.event.inputs.platform == 'All' }}  
     runs-on: windows-2022
@@ -86,13 +85,12 @@ jobs:
       - name: Move artifacts
         run: |
          mkdir artifacts
-         Copy-Item -Path ./build/Release/* -Destination ./artifacts
-         Compress-Archive -Path ./artifacts/*.* -DestinationPath eternal-win-x64.zip
+         mv ./build/Release/*.exe ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: eternal-win-x64
-          path: eternal-win-x64.zip
+          path: artifacts
       - name: Release Eternal (Windows x64)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Windows (x64)' }}
         env: 
@@ -103,7 +101,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Windows x64)" \
               --generate-notes \
-              ./artifacts/eternal-win-x64.zip
+              ./artifacts/
   eternal-linux:
     if: ${{ github.event.inputs.platform == 'Linux' || github.event.inputs.platform == 'All' }}  
     runs-on: ubuntu-latest
@@ -191,7 +189,8 @@ jobs:
           ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS
       - name: Move APK to artifacts
         run: |
-          Copy-Item -Path ./android/app/build/outputs/apk/* -Destination ./artifacts
+          mkdir artifacts
+          Copy-Item -Path ./android/app/build/outputs/apk/debug/*.apk -Destination ./artifacts
       - name: Upload artifact Android
         uses: actions/upload-artifact@v4
         with:
