@@ -216,7 +216,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-          merge-multiple: true
       - name: Release Eternal (All)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'All' }}
         env: 
@@ -229,5 +228,5 @@ jobs:
               --generate-notes \
               ./artifacts/linux.tar.gz \
               ./artifacts/*.apk \
-              ./artifacts/eternal-win.zip \
-              ./artifacts/eternal-win-x64.zip 
+              ./artifacts/eternal-win \
+              ./artifacts/eternal-win-x64 
