@@ -4113,10 +4113,6 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                 opcodeSize = 0;
                 GetAchievement(scriptEng.operands[0], scriptEng.operands[1]);
                 break;
-            case FUNC_SETSCREENWIDTH:
-                opcodeSize = 0;
-                SetScreenWidth(scriptEng.operands[0], scriptEng.operands[1]);
-                break;
         }
 
         // Set Values
@@ -4655,9 +4651,9 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     case VAR_SCREENCAMERATARGET: cameraTarget = scriptEng.operands[i]; break;
                     case VAR_SCREENCAMERASTYLE: cameraStyle = scriptEng.operands[i]; break;
                     case VAR_SCREENDRAWLISTSIZE: drawListEntries[arrayVal].listSize = scriptEng.operands[i]; break;
-                    case VAR_SCREENCENTERX: break;
+                    case VAR_SCREENCENTERX: SetScreenWidth(scriptEng.operands[i]*2, 0); break;
                     case VAR_SCREENCENTERY: break;
-                    case VAR_SCREENXSIZE: break;
+                    case VAR_SCREENXSIZE: SetScreenWidth(scriptEng.operands[i], 0); break;
                     case VAR_SCREENYSIZE: break;
                     case VAR_SCREENXOFFSET:
                         xScrollOffset = scriptEng.operands[i];
