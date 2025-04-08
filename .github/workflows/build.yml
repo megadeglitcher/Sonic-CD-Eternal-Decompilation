@@ -206,7 +206,7 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="Sonic CD Eternal (Android)" \
               --generate-notes \
-              ./artifacts/*.apk
+              ./artifacts/eternal-android
   release-builds:
     name: Release Eternal
     runs-on: ubuntu-22.04
@@ -227,6 +227,6 @@ jobs:
               --title="Sonic CD Eternal" \
               --generate-notes \
               ./artifacts/eternal-linux \
-              ./artifacts/*.apk \
+              ./artifacts/eternal-android \
               ./artifacts/eternal-win \
               ./artifacts/eternal-win-x64 
