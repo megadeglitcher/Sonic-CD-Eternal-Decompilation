@@ -124,12 +124,12 @@ jobs:
         run: |
           mkdir artifacts
           mv ./build/"CD Eternal"* ./artifacts
-          tar -czvf linux.tar.gz -C ./artifacts .
+          tar -czvf linux.tar.gz -C ./artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: eternal-linux
-          path: linux.tar.gz
+          path: linux.tar.gz/"CD Eternal"
       - name: Release Eternal (Linux)
         if: ${{ github.event.inputs.create_release == 'true' && github.event.inputs.platform == 'Linux' }}
         env: 
