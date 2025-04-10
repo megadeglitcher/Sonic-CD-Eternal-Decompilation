@@ -167,22 +167,27 @@ jobs:
           Invoke-WebRequest -Uri "https://libsdl.org/release/SDL2-devel-2.0.14-VC.zip" -OutFile "SDL2.zip"
           Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/windows/
           Rename-Item ./dependencies/windows/SDL2-2.0.14 SDL2
-          Invoke-WebRequest -Uri "https://github.com/aerisarn/SDL-uwp-gl/archive/refs/heads/release-2.28.5-uwp-gl.zip" -OutFile "SDL2.zip"
-          Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/win-uwp/
-          Rename-Item ./dependencies/win-uwp/SDL-uwp-gl-release-2.28.5-uwp-gl SDL2
           Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
           Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/windows/
           Rename-Item ./dependencies/windows/glew-2.2.0 glew
+       - name: Download Dependencies (UWP)
+         run: |
           Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
           Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/win-uwp/
           Rename-Item ./dependencies/win-uwp/glew-2.2.0 glew
+          Invoke-WebRequest -Uri "https://github.com/aerisarn/SDL-uwp-gl/archive/refs/heads/release-2.28.5-uwp-gl.zip" -OutFile "SDL2.zip"
+          Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/win-uwp/
+          Rename-Item ./dependencies/win-uwp/SDL-uwp-gl-release-2.28.5-uwp-gl SDL2
           vcpkg install libogg libvorbis libtheora glew sdl2 --triplet=x64-windows-static
           vcpkg integrate install
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.201217.4
           nuget restore RSDKv3UWP.sln
+          Set-ExecutionPolicy Bypass -Scope Process -Force;
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+          choco install chocolatey-visualstudio.extension --version=1.6.0
        - name: Build Eternal
          run: |
-            msbuild ./dependencies/windows/libogg/win32/VS2015/libogg.sln /p:Configuration=Release /p:Platform=x64
+            msbuild ./dependencies/windows/libogg/win32/VS2015/libogg.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
             msbuild RSDKv3UWP.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" /p:PlatformToolset=v143 /p:DefineConstants=_CRT_SECURE_NO_WARNINGS
        - name: Move artifacts
          run: |
