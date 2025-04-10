@@ -182,7 +182,7 @@ jobs:
           nuget restore RSDKv3UWP.sln
        - name: Build Eternal
          run: |
-            msbuild ./dependencies/windows/libogg/win32/VS2010/libogg_static.sln /p:Configuration=Release /p:Platform=x64
+            msbuild ./dependencies/windows/libogg/win32/VS2015/libogg.sln /p:Configuration=Release /p:Platform=x64
             msbuild RSDKv3UWP.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" /p:PlatformToolset=v143 /p:DefineConstants=_CRT_SECURE_NO_WARNINGS
        - name: Move artifacts
          run: |
