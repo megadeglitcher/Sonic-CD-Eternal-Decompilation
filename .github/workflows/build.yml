@@ -173,18 +173,21 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
           Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/windows/
           Rename-Item ./dependencies/windows/glew-2.2.0 glew
-          vcpkg install libogg libvorbis libtheora glew sdl2 --triplet=x86-windows-static
+          Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
+          Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/win-uwp/
+          Rename-Item ./dependencies/win-uwp/glew-2.2.0 glew
+          vcpkg install libogg libvorbis libtheora glew sdl2 --triplet=x64-windows-static
           vcpkg integrate install
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.201217.4
           nuget restore RSDKv3UWP.sln
        - name: Build Eternal
          run: |
-            msbuild RSDKv3UWP.sln /p:Configuration=Release /p:Platform=ARM64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" /p:PlatformToolset=v143 /p:DefineConstants=_CRT_SECURE_NO_WARNINGS
+            msbuild RSDKv3UWP.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" /p:PlatformToolset=v143 /p:DefineConstants=_CRT_SECURE_NO_WARNINGS
        - name: Move artifacts
          run: |
             mkdir artifacts
-            move ./build/ARM64/Release/* ./artifacts 
-            move ./build/ARM64/Release/* ./artifacts
+            move ./build/x64/Release/* ./artifacts 
+            move ./build/x64/Release/* ./artifacts
        - name: Upload artifacts
          uses: actions/upload-artifact@v4
          with:
