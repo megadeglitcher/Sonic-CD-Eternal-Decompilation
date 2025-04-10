@@ -173,7 +173,7 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
           Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/windows/
           Rename-Item ./dependencies/windows/glew-2.2.0 glew
-          vcpkg install libogg:x86-windows-static-md libvorbis:x86-windows-static libtheora:x86-windows-static 
+          vcpkg install libogg libvorbis libtheora glew sdl2 --triplet=x86-windows-static
           vcpkg integrate install
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.201217.4
           nuget restore RSDKv3UWP.sln
