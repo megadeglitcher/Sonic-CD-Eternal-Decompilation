@@ -146,6 +146,7 @@ jobs:
     if: ${{ github.event.inputs.platform == 'UWP' || github.event.inputs.platform == 'All' }}
     runs-on: windows-latest
     steps:
+       - uses: nuget/setup-nuget@v2
        - name: Checkout
          uses: actions/checkout@v2
          with:
@@ -169,6 +170,7 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/aerisarn/SDL-uwp-gl/archive/refs/heads/release-2.28.5-uwp-gl.zip" -OutFile "SDL2.zip"
           Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/win-uwp/
           Rename-Item ./dependencies/win-uwp/SDL-uwp-gl-release-2.28.5-uwp-gl SDL2
+          nuget install Microsoft.Windows.CppWinRT -Version 2.0.201217.4
        - name: Build Eternal
          run: |
             msbuild RSDKv3UWP.sln /p:Configuration=Release /p:Platform=ARM64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" /p:PlatformToolset=v143 /p:DefineConstants=_CRT_SECURE_NO_WARNINGS
