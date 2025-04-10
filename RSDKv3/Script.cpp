@@ -458,6 +458,8 @@ const FunctionInfo functions[] = {
 #endif
     FunctionInfo("GetAchievement", 2),
     FunctionInfo("SetScreenWidth", 2),
+    FunctionInfo("GetNativeVar", 2),
+    FunctionInfo("SetNativeVar", 2),
 };
 
 #if RETRO_USE_COMPILER
@@ -908,6 +910,8 @@ enum ScrFunction {
 #endif
     FUNC_GETACHIEVEMENT,
     FUNC_SETSCREENWIDTH,
+    FUNC_GETNATIVEVAR,
+    FUNC_SETNATIVEVAR,
     FUNC_MAX_CNT
 };
 
@@ -4113,6 +4117,71 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                 opcodeSize = 0;
                 GetAchievement(scriptEng.operands[0], scriptEng.operands[1]);
                 break;
+            case FUNC_SETSCREENWIDTH:
+                opcodeSize = 0;
+                SetScreenWidth(scriptEng.operands[0], scriptEng.operands[1]);
+                break;
+			case FUNC_GETNATIVEVAR: {
+				if 			(scriptText == "DevMenu"){;				scriptEng.operands[0] = Engine.devMenu;
+				} else if	(scriptText == "EngineDebugMode"){;		scriptEng.operands[0] = engineDebugMode;
+				} else if	(scriptText == "TxtScripts"){;			scriptEng.operands[0] = forceUseScripts;
+				} else if	(scriptText == "StartingCategory"){;	scriptEng.operands[0] = Engine.startList;
+				} else if	(scriptText == "StartingScene"){;		scriptEng.operands[0] = Engine.startStage;
+				} else if	(scriptText == "FastForwardSpeed"){;	scriptEng.operands[0] = Engine.fastForwardSpeed;
+#if RETRO_PLATFORM == RETRO_WINDOWS
+				} else if	(scriptText == "UseSteamDir"){;			scriptEng.operands[0] = Engine.useSteamDir;
+#endif
+				} else if	(scriptText == "UseHQModes"){;			scriptEng.operands[0] = Engine.useHQModes;
+//				} else if	(scriptText == "DataFile"){;			scriptEng.operands[0] = Engine.dataFile;
+				} else if	(scriptText == "Language"){;			scriptEng.operands[0] = Engine.language;
+				} else if	(scriptText == "GameType"){;			scriptEng.operands[0] = Engine.gameTypeID;
+				} else if	(scriptText == "OriginalControls"){;	scriptEng.operands[0] = controlMode;
+				} else if	(scriptText == "DisableTouchControls"){;	scriptEng.operands[0] = disableTouchControls;
+				} else if	(scriptText == "DisableFocusPause"){;	scriptEng.operands[0] = disableFocusPause;
+				} else if	(scriptText == "FullScreen"){;			scriptEng.operands[0] = Engine.startFullScreen;
+				} else if	(scriptText == "Borderless"){;			scriptEng.operands[0] = Engine.borderless;
+				} else if	(scriptText == "VSync"){;				scriptEng.operands[0] = Engine.vsync;
+				} else if	(scriptText == "ScalingMode"){;			scriptEng.operands[0] = Engine.scalingMode;
+				} else if	(scriptText == "WindowScale"){;			scriptEng.operands[0] = Engine.windowScale;
+				} else if	(scriptText == "ScreenWidth"){;			scriptEng.operands[0] = SCREEN_XSIZE;
+				} else if	(scriptText == "RefreshRate"){;			scriptEng.operands[0] = Engine.refreshRate;
+				} else if	(scriptText == "DimLimit"){;			scriptEng.operands[0] = Engine.dimLimit;
+				} else if	(scriptText == "HardwareRenderer" && Engine.gameRenderType == Engine.gameRenderTypes[RENDER_HW]){;
+																	scriptEng.operands[0] = 1;
+				} else if	(scriptText == "BGMVolume"){;			scriptEng.operands[0] = bgmVolume;
+				} else if	(scriptText == "SFXVolume"){;			scriptEng.operands[0] = sfxVolume;
+				} else { scriptEng.operands[0] = 0;}
+				}
+			case FUNC_SETNATIVEVAR: {
+				if 			(scriptText == "DevMenu"){;				Engine.devMenu = scriptEng.operands[0];
+				} else if	(scriptText == "EngineDebugMode"){;		engineDebugMode = scriptEng.operands[0];
+				} else if	(scriptText == "TxtScripts"){;			forceUseScripts = scriptEng.operands[0];
+				} else if	(scriptText == "StartingCategory"){;	Engine.startList = scriptEng.operands[0];
+				} else if	(scriptText == "StartingScene"){;		Engine.startStage = scriptEng.operands[0];
+				} else if	(scriptText == "FastForwardSpeed"){;	Engine.fastForwardSpeed = scriptEng.operands[0];
+#if RETRO_PLATFORM == RETRO_WINDOWS
+				} else if	(scriptText == "UseSteamDir"){;			Engine.useSteamDir = scriptEng.operands[0];
+#endif
+				} else if	(scriptText == "UseHQModes"){;			Engine.useHQModes = scriptEng.operands[0];
+//				} else if	(scriptText == "DataFile"){;			Engine.dataFile = scriptEng.operands[0];
+				} else if	(scriptText == "Language"){;			Engine.language = scriptEng.operands[0];
+				} else if	(scriptText == "GameType"){;			Engine.gameTypeID = scriptEng.operands[0];
+				} else if	(scriptText == "OriginalControls"){;	controlMode = scriptEng.operands[0];
+				} else if	(scriptText == "DisableTouchControls"){;	disableTouchControls = scriptEng.operands[0];
+				} else if	(scriptText == "DisableFocusPause"){;	disableFocusPause = scriptEng.operands[0];
+				} else if	(scriptText == "FullScreen"){;			Engine.startFullScreen = scriptEng.operands[0];
+				} else if	(scriptText == "Borderless"){;			Engine.borderless = scriptEng.operands[0];
+				} else if	(scriptText == "VSync"){;				Engine.vsync = scriptEng.operands[0];
+				} else if	(scriptText == "ScalingMode"){;			Engine.scalingMode = scriptEng.operands[0];
+				} else if	(scriptText == "WindowScale"){;			Engine.windowScale = scriptEng.operands[0];
+				} else if	(scriptText == "ScreenWidth"){;			SCREEN_XSIZE = scriptEng.operands[0];
+				} else if	(scriptText == "RefreshRate"){;			Engine.refreshRate = scriptEng.operands[0];
+				} else if	(scriptText == "DimLimit"){;			Engine.dimLimit = scriptEng.operands[0];
+				} else if	(scriptText == "HardwareRenderer"){;	Engine.gameRenderType = Engine.gameRenderTypes[scriptEng.operands[0]];
+				} else if	(scriptText == "BGMVolume"){;			bgmVolume = scriptEng.operands[0];
+				} else if	(scriptText == "SFXVolume"){;			sfxVolume = scriptEng.operands[0];
+				}
+				}
         }
 
         // Set Values
