@@ -170,6 +170,9 @@ jobs:
           Invoke-WebRequest -Uri "https://github.com/aerisarn/SDL-uwp-gl/archive/refs/heads/release-2.28.5-uwp-gl.zip" -OutFile "SDL2.zip"
           Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/win-uwp/
           Rename-Item ./dependencies/win-uwp/SDL-uwp-gl-release-2.28.5-uwp-gl SDL2
+          Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
+          Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/windows/
+          Rename-Item ./dependencies/windows/glew-2.2.0 glew
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.201217.4
           nuget restore RSDKv3UWP.sln
        - name: Build Eternal
@@ -183,7 +186,7 @@ jobs:
        - name: Upload artifacts
          uses: actions/upload-artifact@v4
          with:
-            name: v3-xboxone
+            name: v3-uwp
             path: artifacts
   eternal-android:
       if: ${{ github.event.inputs.platform == 'Android' || github.event.inputs.platform == 'All' }}  
