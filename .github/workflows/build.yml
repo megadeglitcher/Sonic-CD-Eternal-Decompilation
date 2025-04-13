@@ -155,15 +155,6 @@ jobs:
          uses: microsoft/setup-msbuild@v1
        - name: Download Dependencies (Windows)
          run: |
-          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.zip" -OutFile "libogg.zip"
-          Expand-Archive -Path libogg.zip -DestinationPath ./dependencies/windows/
-          Rename-Item ./dependencies/windows/libogg-1.3.5 libogg
-          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.7.zip" -OutFile "libvorbis.zip"
-          Expand-Archive -Path libvorbis.zip -DestinationPath ./dependencies/windows/
-          Rename-Item ./dependencies/windows/libvorbis-1.3.7 libvorbis
-          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/theora/libtheora-1.1.1.zip" -OutFile "libtheora.zip"
-          Expand-Archive -Path libtheora.zip -DestinationPath ./dependencies/windows
-          Rename-Item ./dependencies/windows/libtheora-1.1.1 libtheora
           Invoke-WebRequest -Uri "https://libsdl.org/release/SDL2-devel-2.0.14-VC.zip" -OutFile "SDL2.zip"
           Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/windows/
           Rename-Item ./dependencies/windows/SDL2-2.0.14 SDL2
@@ -172,15 +163,9 @@ jobs:
           Rename-Item ./dependencies/windows/glew-2.2.0 glew
        - name: Download Dependencies (UWP)
          run: |
-          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.zip" -OutFile "libogg.zip"
-          Expand-Archive -Path libogg.zip -DestinationPath ./dependencies/win-uwp/
-          Rename-Item ./dependencies/win-uwp/libogg-1.3.5 libogg
           Invoke-WebRequest -Uri "https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip" -OutFile "GLEW.zip"
           Expand-Archive -Path GLEW.zip -DestinationPath ./dependencies/win-uwp/
           Rename-Item ./dependencies/win-uwp/glew-2.2.0 glew
-          Invoke-WebRequest -Uri "https://github.com/aerisarn/SDL-uwp-gl/archive/refs/heads/release-2.28.5-uwp-gl.zip" -OutFile "SDL2.zip"
-          Expand-Archive -Path SDL2.zip -DestinationPath ./dependencies/win-uwp/
-          Rename-Item ./dependencies/win-uwp/SDL-uwp-gl-release-2.28.5-uwp-gl SDL2
           vcpkg install libogg libvorbis libtheora glew sdl2 --triplet=x64-windows-static
           vcpkg integrate install
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.201217.4

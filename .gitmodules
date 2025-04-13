@@ -4,3 +4,15 @@
 [submodule "flatpak/shared-modules"]
 	path = flatpak/shared-modules
 	url = https://github.com/flathub/shared-modules.git
+[submodule "SDL2"]
+	path = dependencies/win-uwp/SDL2
+	url = https://github.com/aerisarn/SDL-uwp-gl/
+[submodule "libogg"]
+	path = dependencies/windows/libogg
+	url = https://github.com/gcp/libogg
+[submodule "libtheora"]
+	path = dependencies/windows/libtheora
+	url = https://github.com/xiph/theora
+[submodule "libvorbis"]
+	path = dependencies/windows/libvorbis
+	url = https://github.com/xiph/vorbis

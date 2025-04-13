@@ -64,8 +64,6 @@ RSDKv3/*.bin
 *.xcsettings
 
 #dependencies
-[Dd]ependencies/win-uwp/**
-[Dd]ependencies/windows/*
 [Dd]ependencies/android/*
 [Dd]ependencies/mac/libogg/
 [Dd]ependencies/mac/libtheora/
