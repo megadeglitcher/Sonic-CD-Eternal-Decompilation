@@ -155,6 +155,9 @@ jobs:
          uses: microsoft/setup-msbuild@v1
        - name: Download Dependencies (Windows)
          run: |
+          Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.5.zip" -OutFile "libogg.zip"
+          Expand-Archive -Path libogg.zip -DestinationPath ./dependencies/windows/
+          Rename-Item ./dependencies/windows/libogg-1.3.5 libogg
           Invoke-WebRequest -Uri "https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.7.zip" -OutFile "libvorbis.zip"
           Expand-Archive -Path libvorbis.zip -DestinationPath ./dependencies/windows/
           Rename-Item ./dependencies/windows/libvorbis-1.3.7 libvorbis
@@ -188,6 +191,7 @@ jobs:
           "--quiet", "--norestart", "--force", "--wait" -Wait -PassThru
        - name: Build Eternal
          run: |
+            msbuild ./dependencies/windows/libogg/win32/VS2015/libogg.sln /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v140
             msbuild RSDKv3UWP.sln /p:Configuration=Release /p:Platform=x64 /p:ForceImportBeforeCppTargets="$env:GITHUB_WORKSPACE/props/winactions.props" /p:PlatformToolset=v143 /p:DefineConstants=_CRT_SECURE_NO_WARNINGS
        - name: Move artifacts
          run: |
