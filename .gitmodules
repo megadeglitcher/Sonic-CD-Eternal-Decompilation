@@ -10,6 +10,9 @@
 [submodule "libogg"]
 	path = dependencies/windows/libogg
 	url = https://github.com/gcp/libogg
+[submodule "libogg"]
+	path = dependencies/win-uwp/libogg
+	url = https://github.com/gcp/libogg
 [submodule "libtheora"]
 	path = dependencies/windows/libtheora
 	url = https://github.com/xiph/theora
