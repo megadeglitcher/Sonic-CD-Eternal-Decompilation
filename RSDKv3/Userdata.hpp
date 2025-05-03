@@ -80,6 +80,7 @@ inline void LoadAchievementsMenu() { ReadUserdata(); }
 inline void LoadLeaderboardsMenu() { ReadUserdata(); }
 void SetScreenWidth(int width, int unused);
 void SetUpdateChecker(int value);
+void GetUpdateChecker();
 void CheckUpdates();
 
 #endif //! USERDATA_H

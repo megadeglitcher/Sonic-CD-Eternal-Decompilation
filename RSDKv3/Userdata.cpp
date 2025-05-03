@@ -1164,6 +1164,11 @@ void SetUpdateChecker(int value)
     CheckForthemUpdates = value;
 }
 
+void GetUpdateChecker()
+{
+    scriptEng.checkResult = CheckForthemUpdates;
+}
+
 void SetLeaderboard(int leaderboardID, int result)
 {
     if (!Engine.trialMode && !debugMode) {
