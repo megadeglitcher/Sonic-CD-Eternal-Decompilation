@@ -461,6 +461,7 @@ const FunctionInfo functions[] = {
     FunctionInfo("GetNativeVar", 2),
     FunctionInfo("SetNativeVar", 2),
     FunctionInfo("CheckUpdates", 0),
+    FunctionInfo("SetUpdateChecker", 1),
 };
 
 #if RETRO_USE_COMPILER
@@ -914,6 +915,7 @@ enum ScrFunction {
     FUNC_GETNATIVEVAR,
     FUNC_SETNATIVEVAR,
     FUNC_CHECKUPDATES,
+    FUNC_SETUPDATECHECKER,
     FUNC_MAX_CNT
 };
 
@@ -4140,6 +4142,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 				} else if	(scriptText == "OriginalControls"){;	scriptEng.operands[0] = controlMode;
 				} else if	(scriptText == "DisableTouchControls"){;	scriptEng.operands[0] = disableTouchControls;
 				} else if	(scriptText == "DisableFocusPause"){;	scriptEng.operands[0] = disableFocusPause;
+				} else if	(scriptText == "CheckForUpdates"){;		scriptEng.operands[0] = CheckForthemUpdates;
 				} else if	(scriptText == "FullScreen"){;			scriptEng.operands[0] = Engine.startFullScreen;
 				} else if	(scriptText == "Borderless"){;			scriptEng.operands[0] = Engine.borderless;
 				} else if	(scriptText == "VSync"){;				scriptEng.operands[0] = Engine.vsync;
@@ -4171,6 +4174,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 				} else if	(scriptText == "OriginalControls"){;	controlMode = scriptEng.operands[0];
 				} else if	(scriptText == "DisableTouchControls"){;	disableTouchControls = scriptEng.operands[0];
 				} else if	(scriptText == "DisableFocusPause"){;	disableFocusPause = scriptEng.operands[0];
+				} else if	(scriptText == "CheckForUpdates"){;		CheckForthemUpdates = scriptEng.operands[0];
 				} else if	(scriptText == "FullScreen"){;			Engine.startFullScreen = scriptEng.operands[0];
 				} else if	(scriptText == "Borderless"){;			Engine.borderless = scriptEng.operands[0];
 				} else if	(scriptText == "VSync"){;				Engine.vsync = scriptEng.operands[0];
@@ -4187,6 +4191,10 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
             case FUNC_CHECKUPDATES:
                 opcodeSize = 0;
                 CheckUpdates();
+                break;
+            case FUNC_SETUPDATECHECKER:
+                opcodeSize = 0;
+                SetUpdateChecker(scriptEng.operands[0]);
                 break;
         }
 
