@@ -463,6 +463,7 @@ const FunctionInfo functions[] = {
     FunctionInfo("CheckUpdates", 0),
     FunctionInfo("SetUpdateChecker", 1),
     FunctionInfo("GetUpdateChecker", 0),
+    FunctionInfo("LoadWebsite", 1),
 };
 
 #if RETRO_USE_COMPILER
@@ -918,6 +919,7 @@ enum ScrFunction {
     FUNC_CHECKUPDATES,
     FUNC_SETUPDATECHECKER,
     FUNC_GETUPDATECHECKER,
+    FUNC_LOADWEBSITE,
     FUNC_MAX_CNT
 };
 
@@ -4201,6 +4203,16 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
             case FUNC_GETUPDATECHECKER:
                 opcodeSize = 0;
                 GetUpdateChecker();
+                break;
+            case FUNC_LOADWEBSITE: 
+            	opcodeSize = 0;
+				char temporar[100];
+				strcpy(temporar, "Loading website: https://");
+				strcat(temporar, scriptText);
+				PrintLog(temporar);
+				strcpy(temporar, "https://");
+				strcat(temporar, scriptText);
+				SDL_OpenURL(temporar);
                 break;
         }
 
