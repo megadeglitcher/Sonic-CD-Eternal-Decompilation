@@ -4,7 +4,9 @@
 #include <Windows.h>
 #include <codecvt>
 #include "../dependencies/windows/ValveFileVDF/vdf_parser.hpp"
-
+#include <windows.h>
+#include <wininet.h>
+#pragma comment(lib, "wininet.lib")
 HKEY hKey;
 
 LONG GetDWORDRegKey(HKEY hKey, const std::wstring &strValueName, DWORD &nValue, DWORD nDefaultValue)
@@ -1094,6 +1096,49 @@ void GetAchievement(int achievementID, int achievementDone)
     if (!debugMode) {
         scriptEng.checkResult = (achievements[achievementID].status == achievementDone);
     }
+}
+
+void CheckUpdates()
+{
+    scriptEng.checkResult = 0;
+
+    DWORD flags;
+    if (!InternetGetConnectedState(&flags, 0)) {
+        return;
+    }
+
+    HINTERNET hInternet = InternetOpenA("RetroEngine", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+    if (!hInternet) return;
+
+    DWORD timeout = 2000;
+    InternetSetOptionA(hInternet, INTERNET_OPTION_CONNECT_TIMEOUT, &timeout, sizeof(timeout));
+    InternetSetOptionA(hInternet, INTERNET_OPTION_RECEIVE_TIMEOUT, &timeout, sizeof(timeout));
+    InternetSetOptionA(hInternet, INTERNET_OPTION_SEND_TIMEOUT, &timeout, sizeof(timeout));
+
+    HINTERNET hUrl = InternetOpenUrlA(
+        hInternet,
+        "https://megadeglitcher.github.io/EternalVersion/",
+        NULL,
+        0,
+        INTERNET_FLAG_SECURE | INTERNET_FLAG_RELOAD | INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_NO_AUTO_REDIRECT,
+        0
+    );
+
+    if (!hUrl) {
+        InternetCloseHandle(hInternet);
+        return;
+    }
+
+    char buffer[32] = {0};
+    DWORD bytesRead = 0;
+
+    if (InternetReadFile(hUrl, buffer, sizeof(buffer) - 1, &bytesRead) && bytesRead > 0) {
+        buffer[bytesRead] = '\0';
+        scriptEng.checkResult = atoi(buffer);
+    }
+
+    InternetCloseHandle(hUrl);
+    InternetCloseHandle(hInternet);
 }
 
 void SetScreenWidth(int width, int unused)

@@ -460,6 +460,7 @@ const FunctionInfo functions[] = {
     FunctionInfo("SetScreenWidth", 2),
     FunctionInfo("GetNativeVar", 2),
     FunctionInfo("SetNativeVar", 2),
+    FunctionInfo("CheckUpdates", 0),
 };
 
 #if RETRO_USE_COMPILER
@@ -912,6 +913,7 @@ enum ScrFunction {
     FUNC_SETSCREENWIDTH,
     FUNC_GETNATIVEVAR,
     FUNC_SETNATIVEVAR,
+    FUNC_CHECKUPDATES,
     FUNC_MAX_CNT
 };
 
@@ -4182,6 +4184,10 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 				} else if	(scriptText == "SFXVolume"){;			sfxVolume = scriptEng.operands[0];
 				}
 				}
+            case FUNC_CHECKUPDATES:
+                opcodeSize = 0;
+                CheckUpdates();
+                break;
         }
 
         // Set Values
