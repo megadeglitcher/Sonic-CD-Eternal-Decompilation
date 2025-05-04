@@ -461,8 +461,8 @@ const FunctionInfo functions[] = {
     FunctionInfo("GetNativeVar", 2),
     FunctionInfo("SetNativeVar", 2),
     FunctionInfo("CheckUpdates", 0),
-    FunctionInfo("SetUpdateChecker", 1),
-    FunctionInfo("GetUpdateChecker", 0),
+    FunctionInfo("ScriptLog", 1),
+    FunctionInfo("ValueLog", 1),
     FunctionInfo("LoadWebsite", 1),
 };
 
@@ -912,15 +912,15 @@ enum ScrFunction {
 #if RETRO_USE_HAPTICS
     FUNC_HAPTICEFFECT,
 #endif
-    FUNC_GETACHIEVEMENT,
-    FUNC_SETSCREENWIDTH,
-    FUNC_GETNATIVEVAR,
-    FUNC_SETNATIVEVAR,
-    FUNC_CHECKUPDATES,
-    FUNC_SETUPDATECHECKER,
-    FUNC_GETUPDATECHECKER,
+	FUNC_GETACHIEVEMENT,
+	FUNC_SETSCREENWIDTH,
+	FUNC_GETNATIVEVAR,
+	FUNC_SETNATIVEVAR,
+	FUNC_CHECKUPDATES,
+	FUNC_SCRIPTLOG,
+	FUNC_VALUELOG,
     FUNC_LOADWEBSITE,
-    FUNC_MAX_CNT
+	FUNC_MAX_CNT
 };
 
 #if RETRO_USE_COMPILER
@@ -4121,91 +4121,109 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     PlayHaptics(scriptEng.operands[1], scriptEng.operands[2], scriptEng.operands[3]);
                 break;
 #endif
-            case FUNC_GETACHIEVEMENT:
-                opcodeSize = 0;
-                GetAchievement(scriptEng.operands[0], scriptEng.operands[1]);
-                break;
-            case FUNC_SETSCREENWIDTH:
-                opcodeSize = 0;
-                SetScreenWidth(scriptEng.operands[0], scriptEng.operands[1]);
-                break;
+			case FUNC_GETACHIEVEMENT:
+				opcodeSize = 0;
+				GetAchievement(scriptEng.operands[0], scriptEng.operands[1]);
+				break;
+			case FUNC_SETSCREENWIDTH:
+				opcodeSize = 0;
+				SetScreenWidth(scriptEng.operands[0], scriptEng.operands[1]);
+				break;
 			case FUNC_GETNATIVEVAR: {
-				if 			(scriptText == "DevMenu"){;				scriptEng.operands[0] = Engine.devMenu;
-				} else if	(scriptText == "EngineDebugMode"){;		scriptEng.operands[0] = engineDebugMode;
-				} else if	(scriptText == "TxtScripts"){;			scriptEng.operands[0] = forceUseScripts;
-				} else if	(scriptText == "StartingCategory"){;	scriptEng.operands[0] = Engine.startList;
-				} else if	(scriptText == "StartingScene"){;		scriptEng.operands[0] = Engine.startStage;
-				} else if	(scriptText == "FastForwardSpeed"){;	scriptEng.operands[0] = Engine.fastForwardSpeed;
+				int varVal = scriptEng.operands[0];
+				if (StrComp(scriptText, "DevMenu")){				varVal = Engine.devMenu;}
+				if (StrComp(scriptText, "EngineDebugMode")){		varVal = engineDebugMode;}
+				if (StrComp(scriptText, "TxtScripts")){				varVal = forceUseScripts;}
+				if (StrComp(scriptText, "StartingCategory")){		varVal = Engine.startList;}
+				if (StrComp(scriptText, "StartingScene")){			varVal = Engine.startStage;}
+				if (StrComp(scriptText, "FastForwardSpeed")){		varVal = Engine.fastForwardSpeed;}
 #if RETRO_PLATFORM == RETRO_WINDOWS
-				} else if	(scriptText == "UseSteamDir"){;			scriptEng.operands[0] = Engine.useSteamDir;
+				if (StrComp(scriptText, "UseSteamDir")){			varVal = Engine.useSteamDir;}
+#else
+				if (StrComp(scriptText, "UseSteamDir")){			varVal = -1;}
 #endif
-				} else if	(scriptText == "UseHQModes"){;			scriptEng.operands[0] = Engine.useHQModes;
-//				} else if	(scriptText == "DataFile"){;			scriptEng.operands[0] = Engine.dataFile;
-				} else if	(scriptText == "Language"){;			scriptEng.operands[0] = Engine.language;
-				} else if	(scriptText == "GameType"){;			scriptEng.operands[0] = Engine.gameTypeID;
-				} else if	(scriptText == "OriginalControls"){;	scriptEng.operands[0] = controlMode;
-				} else if	(scriptText == "DisableTouchControls"){;	scriptEng.operands[0] = disableTouchControls;
-				} else if	(scriptText == "DisableFocusPause"){;	scriptEng.operands[0] = disableFocusPause;
-				} else if	(scriptText == "CheckForUpdates"){;		scriptEng.operands[0] = CheckForthemUpdates;
-				} else if	(scriptText == "FullScreen"){;			scriptEng.operands[0] = Engine.startFullScreen;
-				} else if	(scriptText == "Borderless"){;			scriptEng.operands[0] = Engine.borderless;
-				} else if	(scriptText == "VSync"){;				scriptEng.operands[0] = Engine.vsync;
-				} else if	(scriptText == "ScalingMode"){;			scriptEng.operands[0] = Engine.scalingMode;
-				} else if	(scriptText == "WindowScale"){;			scriptEng.operands[0] = Engine.windowScale;
-				} else if	(scriptText == "ScreenWidth"){;			scriptEng.operands[0] = SCREEN_XSIZE;
-				} else if	(scriptText == "RefreshRate"){;			scriptEng.operands[0] = Engine.refreshRate;
-				} else if	(scriptText == "DimLimit"){;			scriptEng.operands[0] = Engine.dimLimit;
-				} else if	(scriptText == "HardwareRenderer" && Engine.gameRenderType == Engine.gameRenderTypes[RENDER_HW]){;
-																	scriptEng.operands[0] = 1;
-				} else if	(scriptText == "BGMVolume"){;			scriptEng.operands[0] = bgmVolume;
-				} else if	(scriptText == "SFXVolume"){;			scriptEng.operands[0] = sfxVolume;
-				} else { scriptEng.operands[0] = 0;}
-				}
+				if (StrComp(scriptText, "UseHQModes")){				varVal = Engine.useHQModes;}
+//				} if (StrComp(scriptText, "DataFile")){				varVal = Engine.dataFile;}
+				if (StrComp(scriptText, "Language")){				varVal = Engine.language;}
+				if (StrComp(scriptText, "GameType")){				varVal = Engine.gameTypeID;}
+				if (StrComp(scriptText, "OriginalControls")){		varVal = controlMode;}
+				if (StrComp(scriptText, "DisableTouchControls")){	varVal = disableTouchControls;}
+				if (StrComp(scriptText, "DisableFocusPause")){		varVal = disableFocusPause;}
+				if (StrComp(scriptText, "CheckForUpdates")){		varVal = CheckForthemUpdates;}
+				if (StrComp(scriptText, "FullScreen")){				varVal = Engine.startFullScreen;}
+				if (StrComp(scriptText, "Borderless")){				varVal = Engine.borderless;}
+				if (StrComp(scriptText, "Sync")){					varVal = Engine.vsync;}
+				if (StrComp(scriptText, "ScalingMode")){			varVal = Engine.scalingMode;}
+				if (StrComp(scriptText, "WindowScale")){			varVal = Engine.windowScale;}
+				if (StrComp(scriptText, "ScreenWidth")){			varVal = SCREEN_XSIZE;}
+				if (StrComp(scriptText, "RefreshRate")){			varVal = Engine.refreshRate;}
+				if (StrComp(scriptText, "DimLimit")){				varVal = Engine.dimLimit;}
+				if (StrComp(scriptText, "HardwareRenderer") && Engine.gameRenderType == Engine.gameRenderTypes[RENDER_SW]){varVal = 0;}
+				if (StrComp(scriptText, "HardwareRenderer") && Engine.gameRenderType == Engine.gameRenderTypes[RENDER_HW]){varVal = 1;}
+				if (StrComp(scriptText, "BGMVolume")){				varVal = bgmVolume;}
+				if (StrComp(scriptText, "SFXVolume")){				varVal = sfxVolume;}
+				scriptEng.operands[0] = varVal;
+				break;
+			}
 			case FUNC_SETNATIVEVAR: {
-				if 			(scriptText == "DevMenu"){;				Engine.devMenu = scriptEng.operands[0];
-				} else if	(scriptText == "EngineDebugMode"){;		engineDebugMode = scriptEng.operands[0];
-				} else if	(scriptText == "TxtScripts"){;			forceUseScripts = scriptEng.operands[0];
-				} else if	(scriptText == "StartingCategory"){;	Engine.startList = scriptEng.operands[0];
-				} else if	(scriptText == "StartingScene"){;		Engine.startStage = scriptEng.operands[0];
-				} else if	(scriptText == "FastForwardSpeed"){;	Engine.fastForwardSpeed = scriptEng.operands[0];
+				int varVal = scriptEng.operands[0];
+				if (StrComp(scriptText, "DevMenu")){				Engine.devMenu = varVal;}
+				if (StrComp(scriptText, "EngineDebugMode")){		engineDebugMode = varVal;}
+				if (StrComp(scriptText, "TxtScripts")){				forceUseScripts = varVal;}
+				if (StrComp(scriptText, "StartingCategory")){		Engine.startList = varVal;}
+				if (StrComp(scriptText, "StartingScene")){			Engine.startStage = varVal;}
+				if (StrComp(scriptText, "FastForwardSpeed")){		Engine.fastForwardSpeed = varVal;}
 #if RETRO_PLATFORM == RETRO_WINDOWS
-				} else if	(scriptText == "UseSteamDir"){;			Engine.useSteamDir = scriptEng.operands[0];
+				if (StrComp(scriptText, "UseSteamDir")){			Engine.useSteamDir = varVal;}
 #endif
-				} else if	(scriptText == "UseHQModes"){;			Engine.useHQModes = scriptEng.operands[0];
-//				} else if	(scriptText == "DataFile"){;			Engine.dataFile = scriptEng.operands[0];
-				} else if	(scriptText == "Language"){;			Engine.language = scriptEng.operands[0];
-				} else if	(scriptText == "GameType"){;			Engine.gameTypeID = scriptEng.operands[0];
-				} else if	(scriptText == "OriginalControls"){;	controlMode = scriptEng.operands[0];
-				} else if	(scriptText == "DisableTouchControls"){;	disableTouchControls = scriptEng.operands[0];
-				} else if	(scriptText == "DisableFocusPause"){;	disableFocusPause = scriptEng.operands[0];
-				} else if	(scriptText == "CheckForUpdates"){;		CheckForthemUpdates = scriptEng.operands[0];
-				} else if	(scriptText == "FullScreen"){;			Engine.startFullScreen = scriptEng.operands[0];
-				} else if	(scriptText == "Borderless"){;			Engine.borderless = scriptEng.operands[0];
-				} else if	(scriptText == "VSync"){;				Engine.vsync = scriptEng.operands[0];
-				} else if	(scriptText == "ScalingMode"){;			Engine.scalingMode = scriptEng.operands[0];
-				} else if	(scriptText == "WindowScale"){;			Engine.windowScale = scriptEng.operands[0];
-				} else if	(scriptText == "ScreenWidth"){;			SCREEN_XSIZE = scriptEng.operands[0];
-				} else if	(scriptText == "RefreshRate"){;			Engine.refreshRate = scriptEng.operands[0];
-				} else if	(scriptText == "DimLimit"){;			Engine.dimLimit = scriptEng.operands[0];
-				} else if	(scriptText == "HardwareRenderer"){;	Engine.gameRenderType = Engine.gameRenderTypes[scriptEng.operands[0]];
-				} else if	(scriptText == "BGMVolume"){;			bgmVolume = scriptEng.operands[0];
-				} else if	(scriptText == "SFXVolume"){;			sfxVolume = scriptEng.operands[0];
-				}
-				}
-            case FUNC_CHECKUPDATES:
-                opcodeSize = 0;
-                CheckUpdates();
-                break;
-            case FUNC_SETUPDATECHECKER:
-                opcodeSize = 0;
-                SetUpdateChecker(scriptEng.operands[0]);
-                break;
-            case FUNC_GETUPDATECHECKER:
-                opcodeSize = 0;
-                GetUpdateChecker();
-                break;
-            case FUNC_LOADWEBSITE: 
-            	opcodeSize = 0;
+				if (StrComp(scriptText, "UseHQModes")){				Engine.useHQModes = varVal;}
+//				if (StrComp(scriptText, "DataFile")){				Engine.dataFile = varVal;}
+				if (StrComp(scriptText, "Language")){				Engine.language = varVal;}
+				if (StrComp(scriptText, "GameType")){				Engine.gameTypeID = varVal;}
+				if (StrComp(scriptText, "OriginalControls")){		controlMode = varVal;}
+				if (StrComp(scriptText, "DisableTouchControls")){	disableTouchControls = varVal;}
+				if (StrComp(scriptText, "DisableFocusPause")){		disableFocusPause = varVal;}
+				if (StrComp(scriptText, "CheckForUpdates")){		CheckForthemUpdates = varVal;}
+				if (StrComp(scriptText, "FullScreen")){				Engine.startFullScreen = varVal;}
+				if (StrComp(scriptText, "Borderless")){				Engine.borderless = varVal;}
+				if (StrComp(scriptText, "VSync")){					Engine.vsync = varVal;}
+				if (StrComp(scriptText, "ScalingMode")){			Engine.scalingMode = varVal;}
+				if (StrComp(scriptText, "WindowScale")){			Engine.windowScale = varVal;}
+				if (StrComp(scriptText, "ScreenWidth")){			SCREEN_XSIZE = varVal;}
+				if (StrComp(scriptText, "RefreshRate")){			Engine.refreshRate = varVal;}
+				if (StrComp(scriptText, "DimLimit")){				Engine.dimLimit = varVal;}
+				if (StrComp(scriptText, "HardwareRenderer")){		Engine.gameRenderType = Engine.gameRenderTypes[varVal];}
+				if (StrComp(scriptText, "BGMVolume")){				bgmVolume = varVal;}
+				if (StrComp(scriptText, "SFXVolume")){				sfxVolume = varVal;}
+				break;}
+			case FUNC_CHECKUPDATES:
+				opcodeSize = 0;
+				CheckUpdates();
+				break;
+			case FUNC_SCRIPTLOG: {  // PrintLog("string", amountOfOperands[MAX - 10], ...[any amount of values up to 10])
+				opcodeSize = 0;
+				char scriptLog[0x40];
+				StrCopy(scriptLog, scriptText);
+//				if (scriptEng.operands[1] <= 10) {
+//					char operandText[0x40];
+//					for (int operandCount = 1; operandCount < scriptEng.operands[1]; ++operandCount) {
+//						sprintf(operandText, "%d", scriptEng.operands[operandCount]);
+//						if (operandCount < scriptEng.operands[1])
+//							StrAdd(operandText, ", ");
+//						StrAdd(scriptLog, operandText);
+//					}
+//				}
+				PrintLog(scriptText);
+				break;
+			}
+			case FUNC_VALUELOG: {
+				opcodeSize = 0;
+				sprintf(scriptText, "%d", scriptEng.operands[0]);
+				PrintLog(scriptText);
+				break;
+			}
+			case FUNC_LOADWEBSITE: 
+				opcodeSize = 0;
 				char temporar[100];
 				strcpy(temporar, "Loading website: https://");
 				strcat(temporar, scriptText);
@@ -4213,8 +4231,8 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 				strcpy(temporar, "https://");
 				strcat(temporar, scriptText);
 				SDL_OpenURL(temporar);
-                break;
-        }
+				break;
+		}
 
         // Set Values
         if (opcodeSize > 0)

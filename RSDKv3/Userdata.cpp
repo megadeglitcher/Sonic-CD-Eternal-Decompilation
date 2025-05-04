@@ -71,7 +71,7 @@ int controlMode              = -1;
 bool disableTouchControls    = false;
 int disableFocusPause        = 0;
 int disableFocusPause_Config = 0;
-int CheckForthemUpdates      = true;
+bool CheckForthemUpdates     = true;
 
 #if RETRO_USE_MOD_LOADER || !RETRO_USE_ORIGINAL_CODE
 bool forceUseScripts        = false;
@@ -362,7 +362,7 @@ void InitUserdata()
         ini.SetBool("Game", "DisableTouchControls", disableTouchControls = false);
         ini.SetInteger("Game", "DisableFocusPause", disableFocusPause = 0);
         disableFocusPause_Config = disableFocusPause;
-        ini.SetInteger("Game", "CheckForUpdates", CheckForthemUpdates = true);
+        ini.SetBool("Game", "CheckForUpdates", CheckForthemUpdates = true);
 
         ini.SetBool("Window", "FullScreen", Engine.startFullScreen = DEFAULT_FULLSCREEN);
         ini.SetBool("Window", "Borderless", Engine.borderless = false);
@@ -506,7 +506,7 @@ void InitUserdata()
         if (!ini.GetInteger("Game", "DisableFocusPause", &disableFocusPause))
             disableFocusPause = 0;
         disableFocusPause_Config = disableFocusPause;
-        if (!ini.GetInteger("Game", "CheckForUpdates", &CheckForthemUpdates))
+        if (!ini.GetBool("Game", "CheckForUpdates", &CheckForthemUpdates))
             CheckForthemUpdates = true;
 
         int platype = -1;
@@ -864,7 +864,7 @@ void WriteSettings()
                    "Handles pausing behaviour when focus is lost\n; 0 = Game focus enabled, engine focus enabled\n; 1 = Game focus enabled, engine focus disabled\n; 2 = Game focus disabled, engine focus disabled");
     ini.SetInteger("Game", "DisableFocusPause", disableFocusPause_Config);
     ini.SetComment("Game", "UpdatesComment", "When enabled, the game will check for updates on startup.");
-    ini.SetInteger("Game", "CheckForUpdates", CheckForthemUpdates);
+    ini.SetBool("Game", "CheckForUpdates", CheckForthemUpdates);
     ini.SetComment("Game", "PlatformComment", "The platform type. 0 is standard (PC/Console), 1 is mobile");
     ini.SetInteger("Game", "Platform", !StrComp(Engine.gamePlatform, "Standard"));
 
@@ -1108,6 +1108,7 @@ void CheckUpdates()
 {
     scriptEng.checkResult = 0;
 
+#if RETRO_PLATFORM == RETRO_WIN
     DWORD flags;
     if (!InternetGetConnectedState(&flags, 0)) {
         return;
@@ -1145,6 +1146,7 @@ void CheckUpdates()
 
     InternetCloseHandle(hUrl);
     InternetCloseHandle(hInternet);
+#endif
 }
 
 void SetScreenWidth(int width, int unused)
@@ -1157,16 +1159,6 @@ void SetScreenWidth(int width, int unused)
 
     ReleaseRenderDevice();
     InitRenderDevice();
-}
-
-void SetUpdateChecker(int value)
-{
-    CheckForthemUpdates = value;
-}
-
-void GetUpdateChecker()
-{
-    scriptEng.checkResult = CheckForthemUpdates;
 }
 
 void SetLeaderboard(int leaderboardID, int result)

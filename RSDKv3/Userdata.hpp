@@ -37,7 +37,7 @@ extern int controlMode;
 extern bool disableTouchControls;
 extern int disableFocusPause;
 extern int disableFocusPause_Config;
-extern int CheckForthemUpdates;
+extern bool CheckForthemUpdates;
 
 #if RETRO_USE_MOD_LOADER || !RETRO_USE_ORIGINAL_CODE
 extern bool forceUseScripts;
@@ -79,8 +79,6 @@ void SetLeaderboard(int leaderboardID, int result);
 inline void LoadAchievementsMenu() { ReadUserdata(); }
 inline void LoadLeaderboardsMenu() { ReadUserdata(); }
 void SetScreenWidth(int width, int unused);
-void SetUpdateChecker(int value);
-void GetUpdateChecker();
 void CheckUpdates();
 
 #endif //! USERDATA_H
