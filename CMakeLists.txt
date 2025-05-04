@@ -165,9 +165,6 @@ if(COMPILE_THEORA)
     target_link_libraries(RetroEngine libtheora)
 endif()
 
-#find_package(CURL REQUIRED)
-#target_link_libraries(RetroEngine CURL::libcurl)
-
 target_include_directories(RetroEngine PRIVATE
     RSDKv3/
     dependencies/all/theoraplay/
