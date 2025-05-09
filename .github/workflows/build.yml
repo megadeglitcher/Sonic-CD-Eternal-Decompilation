@@ -240,7 +240,7 @@ jobs:
       - name: Build Eternal (Android)
         working-directory: ./android
         run: |
-          ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS
+          ./gradlew.bat assembleDebug --no-daemon -PABIFILTERS="armeabi-v7a;arm64-v8a" -PRETRO_DISABLE_PLUS -PRETRO_UPDATE_CHECKER=off
       - name: Move APK to artifacts
         run: |
           mkdir artifacts
