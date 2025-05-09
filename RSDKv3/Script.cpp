@@ -4211,11 +4211,9 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
             case FUNC_LOADWEBSITE: 
             	opcodeSize = 0;
 				char temporar[100];
-				strcpy(temporar, "Loading website: https://");
-				strcat(temporar, scriptText);
-				PrintLog(temporar);
-				strcpy(temporar, "https://");
-				strcat(temporar, scriptText);
+				StrCopy(temporar, "https://");
+				StrAdd(temporar, scriptText);
+				PrintLog("Loading website: https://%s", scriptText);
 				SDL_OpenURL(temporar);
                 break;
         }
