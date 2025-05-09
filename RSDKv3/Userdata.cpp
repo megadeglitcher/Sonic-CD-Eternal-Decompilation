@@ -1132,9 +1132,10 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, Mem
 #endif
 
 int CheckUpdates(char website[]) {
+#if !RETRO_CHECKUPDATE
 	scriptEng.checkResult = -1;
 	PrintLog("CheckUpdates is disabled");
-#if RETRO_CHECKUPDATE
+#else
 	CURL *curl;
 	CURLcode res;
 
@@ -1171,8 +1172,8 @@ int CheckUpdates(char website[]) {
 	}
 
 	curl_global_cleanup();
-	return scriptEng.checkResult;
 #endif
+	return scriptEng.checkResult;
 }
 
 void SetScreenWidth(int width, int unused)
