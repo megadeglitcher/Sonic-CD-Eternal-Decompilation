@@ -4,7 +4,7 @@ on:
     inputs: 
       platform: 
         required: true
-        default: 'Windows (x64)'
+        default: 'All'
         description: Platform
         type: choice
         options:
@@ -43,7 +43,7 @@ jobs:
           submodules: recursive
       - name: Install dependencies
         run: |
-          vcpkg install glew sdl2 libogg libtheora libvorbis curl:x64-windows --triplet=x86-windows-static
+          vcpkg install glew sdl2 libogg libtheora libvorbis curl --triplet=x86-windows-static
       - name: Build Sonic CD Eternal
         run: |
           cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN32_FLAGS}}
@@ -78,7 +78,7 @@ jobs:
           submodules: recursive
       - name: Install dependencies
         run: |
-          vcpkg install glew sdl2 libogg libtheora libvorbis libcurl4-openssl-dev --triplet=x64-windows-static
+          vcpkg install glew sdl2 libogg libtheora libvorbis curl --triplet=x64-windows-static
       - name: Build Sonic CD Eternal
         run: |
           cmake -B build ${{env.GENERAL_FLAGS}} ${{env.GENERAL_WIN_FLAGS}} ${{env.WIN64_FLAGS}}
