@@ -4192,17 +4192,21 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 				} else if	(scriptText == "SFXVolume"){;			sfxVolume = scriptEng.operands[0];
 				}
 				}
-            case FUNC_CHECKUPDATES:
+			case FUNC_CHECKUPDATES:
+				opcodeSize = 0;
+//				char temporarChar[100];
+//				StrCopy(temporarChar, "https://");
+//				StrAdd(temporarChar, scriptText);
+//				CheckUpdates(temporarChar);
+				CheckUpdates("https://megadeglitcher.github.io/EternalVersion/"); // ill remove this next update
+				break;
+            case FUNC_SETUPDATECHECKER: // same for dis
                 opcodeSize = 0;
-                CheckUpdates();
+                CheckForthemUpdates = scriptEng.operands[0];
                 break;
-            case FUNC_SETUPDATECHECKER:
+            case FUNC_GETUPDATECHECKER: // and dis
                 opcodeSize = 0;
-                SetUpdateChecker(scriptEng.operands[0]);
-                break;
-            case FUNC_GETUPDATECHECKER:
-                opcodeSize = 0;
-                GetUpdateChecker();
+                scriptEng.checkResult = CheckForthemUpdates;
                 break;
             case FUNC_LOADWEBSITE: 
             	opcodeSize = 0;

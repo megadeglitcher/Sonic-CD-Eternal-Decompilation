@@ -13,11 +13,17 @@ option(RETRO_MOD_LOADER "Enables or disables the mod loader." ON)
 option(RETRO_USE_HW_RENDER "Enables usage of Hardware Render as an option." ON)
 option(RETRO_DISABLE_PLUS "Disables Plus. Should be set on for any public releases." OFF)
 option(RETRO_ORIGINAL_CODE "Removes any change that differs from the original code, a playable game can't be built this way." OFF)
+option(RETRO_UPDATE_CHECKER "Enables or disables the update checker." ON)
+option(RETRO_USE_CURL "Compiles with cURL." OFF)
 
 set(RETRO_SDL_VERSION 2 CACHE STRING "select between SDL2 and SDL1, defaults to SDL2")
 
 if(RETRO_ORIGINAL_CODE)
     set(RETRO_MOD_LOADER OFF)
+endif()
+
+if(RETRO_UPDATE_CHECKER)
+	set(RETRO_USE_CURL ON)
 endif()
 
 set(RETRO_NAME "CD Eternal")
@@ -165,6 +171,11 @@ if(COMPILE_THEORA)
     target_link_libraries(RetroEngine libtheora)
 endif()
 
+if(RETRO_USE_CURL)
+	find_package(CURL REQUIRED)
+	target_link_libraries(RetroEngine CURL::libcurl)
+endif()
+
 target_include_directories(RetroEngine PRIVATE
     RSDKv3/
     dependencies/all/theoraplay/
@@ -184,6 +195,7 @@ target_compile_definitions(RetroEngine PRIVATE
     RETRO_USE_SDL${RETRO_SDL_VERSION}=1
     FORCE_CASE_INSENSITIVE=$<BOOL:${RETRO_FORCE_CASE_INSENSITIVE}>
     RETRO_USE_ORIGINAL_CODE=$<BOOL:${RETRO_ORIGINAL_CODE}>
+    RETRO_CHECKUPDATE=$<BOOL:${RETRO_UPDATE_CHECKER}>
     
     RSDK_AUTOBUILD=$<BOOL:${RETRO_DISABLE_PLUS}>
     

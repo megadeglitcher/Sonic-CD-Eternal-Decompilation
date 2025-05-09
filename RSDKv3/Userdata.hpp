@@ -10,6 +10,10 @@
 
 #define SAVEDATA_SIZE (0x4000)
 
+#ifndef RETRO_CHECKUPDATE
+#define RETRO_CHECKUPDATE (1)
+#endif
+
 enum OnlineMenuTypes {
     ONLINEMENU_ACHIEVEMENTS = 0,
     ONLINEMENU_LEADERBOARDS = 1,
@@ -79,8 +83,6 @@ void SetLeaderboard(int leaderboardID, int result);
 inline void LoadAchievementsMenu() { ReadUserdata(); }
 inline void LoadLeaderboardsMenu() { ReadUserdata(); }
 void SetScreenWidth(int width, int unused);
-void SetUpdateChecker(int value);
-void GetUpdateChecker();
-void CheckUpdates();
+int CheckUpdates(char website[]);
 
 #endif //! USERDATA_H
