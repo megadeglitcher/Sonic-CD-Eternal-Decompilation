@@ -4198,7 +4198,8 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 //				StrCopy(temporarChar, "https://");
 //				StrAdd(temporarChar, scriptText);
 //				CheckUpdates(temporarChar);
-				CheckUpdates("https://megadeglitcher.github.io/EternalVersion/"); // ill remove this next update
+				if (CheckForthemUpdates)
+					CheckUpdates("https://megadeglitcher.github.io/EternalVersion/"); // ill remove this next update
 				break;
             case FUNC_SETUPDATECHECKER: // same for dis
                 opcodeSize = 0;
