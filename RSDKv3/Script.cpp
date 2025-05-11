@@ -464,6 +464,8 @@ const FunctionInfo functions[] = {
     FunctionInfo("SetUpdateChecker", 1),
     FunctionInfo("GetUpdateChecker", 0),
     FunctionInfo("LoadWebsite", 1),
+    FunctionInfo("SetPaletteEntry", 3),
+    FunctionInfo("GetPaletteEntry", 3),
 };
 
 #if RETRO_USE_COMPILER
@@ -920,6 +922,8 @@ enum ScrFunction {
     FUNC_SETUPDATECHECKER,
     FUNC_GETUPDATECHECKER,
     FUNC_LOADWEBSITE,
+    FUNC_SETPALETTEENTRY,
+    FUNC_GETPALETTEENTRY,
     FUNC_MAX_CNT
 };
 
@@ -4217,6 +4221,8 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 				PrintLog("Loading website: https://%s", scriptText);
 				SDL_OpenURL(temporar);
                 break;
+            case FUNC_SETPALETTEENTRY: SetPaletteEntryPacked(scriptEng.operands[0], scriptEng.operands[1], scriptEng.operands[2]); break;
+            case FUNC_GETPALETTEENTRY: scriptEng.operands[2] = GetPaletteEntryPacked(scriptEng.operands[0], scriptEng.operands[1]); break;
         }
 
         // Set Values

@@ -95,6 +95,21 @@ inline void SetPaletteEntry(byte paletteIndex, byte index, byte r, byte g, byte 
     }
 }
 
+inline void SetPaletteEntryPacked(byte paletteIndex, byte index, uint color)
+{
+    PACK_RGB888(fullPalette[paletteIndex][index], (byte)(color >> 16), (byte)(color >> 8), (byte)(color >> 0));
+
+    fullPalette32[paletteIndex][index].r = (byte)(color >> 16);
+    fullPalette32[paletteIndex][index].g = (byte)(color >> 8);
+    fullPalette32[paletteIndex][index].b = (byte)(color >> 0);
+}
+
+inline uint GetPaletteEntryPacked(byte paletteIndex, byte index)
+{
+    PaletteEntry clr = fullPalette32[paletteIndex][index];
+    return (clr.r << 16) | (clr.g << 8) | (clr.b);
+}
+
 inline void CopyPalette(byte src, byte dest)
 {
     if (src < PALETTE_COUNT && dest < PALETTE_COUNT) {
