@@ -173,6 +173,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], "  SS MANUAL RUN:");
                 AddTextMenuEntry(&gameMenu[1], " PLAYABLE METAL:");
                 AddTextMenuEntry(&gameMenu[1], " REMIXED TRAVEL:");
+                AddTextMenuEntry(&gameMenu[1], "    MIRROR MODE:");
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
                 gameMenu[1].selectionCount  = 1;
@@ -253,6 +254,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//Remixed End
+				
+				//Mirror Start
+					if (GetGlobalVariableByName("Options.MirrorMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.MirrorMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Mirror End
                 stageMode                   = DEVMENU_EXPERIMENTAL;
                 gameMenu[0].selection2      = 32;
             }
@@ -460,6 +470,9 @@ void ProcessStageSelect()
 				if (gameMenu[1].selection1 == 7) {
 					SetGlobalVariableByName("Options.RemixedTravel", GetGlobalVariableByName("Options.RemixedTravel") ^ 1);
 				}
+				if (gameMenu[1].selection1 == 8) {
+					SetGlobalVariableByName("Options.MirrorMode", GetGlobalVariableByName("Options.MirrorMode") ^ 1);
+				}
 				
                 SetupTextMenu(&gameMenu[0], 0);
                 AddTextMenuEntry(&gameMenu[0], "EXPERIMENTAL FEATURES");
@@ -472,6 +485,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], "  SS MANUAL RUN:");
                 AddTextMenuEntry(&gameMenu[1], " PLAYABLE METAL:");
                 AddTextMenuEntry(&gameMenu[1], " REMIXED TRAVEL:");
+                AddTextMenuEntry(&gameMenu[1], "    MIRROR MODE:");
                 gameMenu[0].selection2      = 32;
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
@@ -552,6 +566,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//Remixed End
+				
+				//Mirror Start
+					if (GetGlobalVariableByName("Options.MirrorMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.MirrorMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//Mirror End
             }
             else if (keyPress.B) {
                 stageMode = DEVMENU_MAIN;

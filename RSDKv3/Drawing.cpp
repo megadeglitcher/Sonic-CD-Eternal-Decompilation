@@ -521,6 +521,7 @@ void FlipScreen()
         // Clear the screen. This is needed to keep the
         // pillarboxes in fullscreen from displaying garbage data.
         SDL_RenderClear(Engine.renderer);
+		int mirrorMode = GetGlobalVariableByName("Options.MirrorMode");
 
         ushort *pixels = NULL;
         if (Engine.gameMode != ENGINE_VIDEOWAIT) {
@@ -540,7 +541,11 @@ void FlipScreen()
                 ushort *framebufferPtr = Engine.frameBuffer;
                 for (int y = 0; y < (SCREEN_YSIZE / 2) + 12; ++y) {
                     for (int x = 0; x < SCREEN_XSIZE; ++x) {
-                        *pixels = *framebufferPtr;
+						if (mirrorMode == 0) == 0) {
+							*pixels = *framebufferPtr;
+						} else {
+							*pixels = framebufferPtr[SCREEN_XSIZE - 1 - x];
+						}
                         *(pixels + 1) = *framebufferPtr;
                         *(pixels + lineWidth) = *framebufferPtr;
                         *(pixels + lineWidth + 1) = *framebufferPtr;
@@ -1249,10 +1254,15 @@ void TransferRetroBuffer()
 
     ushort *frameBufferPtr = Engine.frameBuffer;
     uint *texBufferPtr     = Engine.texBuffer;
+	int mirrorMode = GetGlobalVariableByName("Options.MirrorMode");
     for (int y = 0; y < SCREEN_YSIZE; ++y) {
-        for (int x = 0; x < SCREEN_XSIZE; ++x) {
-            texBufferPtr[x] = gfxPalette16to32[frameBufferPtr[x]];
-        }
+		for (int x = 0; x < SCREEN_XSIZE; ++x) {
+			if (mirrorMode == 0) {
+				texBufferPtr[x] = gfxPalette16to32[frameBufferPtr[x]];
+			} else {
+				texBufferPtr[SCREEN_XSIZE - 1 - x] = gfxPalette16to32[frameBufferPtr[x]];
+			}
+		}
 
         texBufferPtr += SCREEN_XSIZE;
         frameBufferPtr += GFX_LINESIZE;
