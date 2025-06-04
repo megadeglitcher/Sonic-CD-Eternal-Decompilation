@@ -541,7 +541,7 @@ void FlipScreen()
                 ushort *framebufferPtr = Engine.frameBuffer;
                 for (int y = 0; y < (SCREEN_YSIZE / 2) + 12; ++y) {
                     for (int x = 0; x < SCREEN_XSIZE; ++x) {
-						if (mirrorMode == 0) == 0) {
+						if (mirrorMode == 0) {
 							*pixels = *framebufferPtr;
 						} else {
 							*pixels = framebufferPtr[SCREEN_XSIZE - 1 - x];

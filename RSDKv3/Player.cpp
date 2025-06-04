@@ -25,8 +25,13 @@ void ProcessPlayerControl(Player *player)
         case CONTROLMODE_NORMAL:
             player->up    = keyDown.up;
             player->down  = keyDown.down;
-            player->left  = keyDown.left;
-            player->right = keyDown.right;
+			if (GetGlobalVariableByName("Options.MirrorMode") == 0) {
+				player->left  = keyDown.left;
+				player->right = keyDown.right;
+			} else {
+				player->left  = keyDown.right;
+				player->right = keyDown.left;
+			}
 
             if (player->left && player->right) {
                 player->left  = false;
