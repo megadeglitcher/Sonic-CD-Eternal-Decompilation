@@ -174,6 +174,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], " PLAYABLE METAL:");
                 AddTextMenuEntry(&gameMenu[1], " REMIXED TRAVEL:");
                 AddTextMenuEntry(&gameMenu[1], "    MIRROR MODE:");
+                AddTextMenuEntry(&gameMenu[1], "  SKY HIGH MODE:");
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
                 gameMenu[1].selectionCount  = 1;
@@ -263,6 +264,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//Mirror End
+				
+				//SkyHigh Start
+					if (GetGlobalVariableByName("Options.SkyHighMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.SkyHighMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//SkyHigh End
                 stageMode                   = DEVMENU_EXPERIMENTAL;
                 gameMenu[0].selection2      = 32;
             }
@@ -473,6 +483,9 @@ void ProcessStageSelect()
 				if (gameMenu[1].selection1 == 8) {
 					SetGlobalVariableByName("Options.MirrorMode", GetGlobalVariableByName("Options.MirrorMode") ^ 1);
 				}
+				if (gameMenu[1].selection1 == 9) {
+					SetGlobalVariableByName("Options.SkyHighMode", GetGlobalVariableByName("Options.SkyHighMode") ^ 1);
+				}
 				
                 SetupTextMenu(&gameMenu[0], 0);
                 AddTextMenuEntry(&gameMenu[0], "EXPERIMENTAL FEATURES");
@@ -486,6 +499,7 @@ void ProcessStageSelect()
                 AddTextMenuEntry(&gameMenu[1], " PLAYABLE METAL:");
                 AddTextMenuEntry(&gameMenu[1], " REMIXED TRAVEL:");
                 AddTextMenuEntry(&gameMenu[1], "    MIRROR MODE:");
+                AddTextMenuEntry(&gameMenu[1], "  SKY HIGH MODE:");
                 gameMenu[0].selection2      = 32;
                 gameMenu[0].alignment       = 2;
                 gameMenu[1].alignment       = 2;
@@ -575,6 +589,15 @@ void ProcessStageSelect()
 						AddTextMenuEntry(&gameMenu[0], "                  Active");
 					}
 				//Mirror End
+				
+				//SkyHigh Start
+					if (GetGlobalVariableByName("Options.SkyHighMode") == 0) {
+						AddTextMenuEntry(&gameMenu[0], "                Inactive");
+					}
+					if (GetGlobalVariableByName("Options.SkyHighMode") == 1) {
+						AddTextMenuEntry(&gameMenu[0], "                  Active");
+					}
+				//SkyHigh End
             }
             else if (keyPress.B) {
                 stageMode = DEVMENU_MAIN;

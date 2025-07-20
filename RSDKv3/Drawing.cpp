@@ -1255,6 +1255,7 @@ void TransferRetroBuffer()
     ushort *frameBufferPtr = Engine.frameBuffer;
     uint *texBufferPtr     = Engine.texBuffer;
 	int mirrorMode = GetGlobalVariableByName("Options.MirrorMode");
+	int SkyHighMode = GetGlobalVariableByName("Options.SkyHighMode");
     for (int y = 0; y < SCREEN_YSIZE; ++y) {
 		for (int x = 0; x < SCREEN_XSIZE; ++x) {
 			if (mirrorMode == 0) {
@@ -1268,7 +1269,11 @@ void TransferRetroBuffer()
         frameBufferPtr += GFX_LINESIZE;
     }
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE, SCREEN_YSIZE, GL_RGBA, GL_UNSIGNED_BYTE, Engine.texBuffer);
+	if (SkyHighMode == 0) {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE, SCREEN_YSIZE, GL_RGBA, GL_UNSIGNED_BYTE, Engine.texBuffer);
+	} else {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCREEN_XSIZE, SCREEN_YSIZE, GL_BGRA, GL_UNSIGNED_BYTE, Engine.texBuffer);
+	}
 
     glBindTexture(GL_TEXTURE_2D, 0);
 #endif
@@ -1276,13 +1281,18 @@ void TransferRetroBuffer()
 
 void UpdateHardwareTextures()
 {
+	int SkyHighMode = GetGlobalVariableByName("Options.SkyHighMode");
     SetActivePalette(0, 0, SCREEN_YSIZE);
     UpdateTextureBufferWithTiles();
     UpdateTextureBufferWithSortedSprites();
 
 #if RETRO_USING_OPENGL
     glBindTexture(GL_TEXTURE_2D, gfxTextureID[0]);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, HW_TEXTURE_SIZE, HW_TEXTURE_SIZE, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, texBuffer);
+	if (SkyHighMode == 0) {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, HW_TEXTURE_SIZE, HW_TEXTURE_SIZE, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, texBuffer);
+	} else {
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, HW_TEXTURE_SIZE, HW_TEXTURE_SIZE, GL_BGRA, GL_UNSIGNED_SHORT_5_5_5_1, texBuffer);
+	}
 #endif
 
     for (byte b = 1; b < HW_TEXTURE_COUNT; ++b) {
@@ -1292,7 +1302,11 @@ void UpdateHardwareTextures()
 
 #if RETRO_USING_OPENGL
         glBindTexture(GL_TEXTURE_2D, gfxTextureID[b]);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, HW_TEXTURE_SIZE, HW_TEXTURE_SIZE, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, texBuffer);
+		if (SkyHighMode == 0) {
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, HW_TEXTURE_SIZE, HW_TEXTURE_SIZE, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, texBuffer);
+		} else {
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, HW_TEXTURE_SIZE, HW_TEXTURE_SIZE, GL_BGRA, GL_UNSIGNED_SHORT_5_5_5_1, texBuffer);
+		}
 #endif
     }
     SetActivePalette(0, 0, SCREEN_YSIZE);
