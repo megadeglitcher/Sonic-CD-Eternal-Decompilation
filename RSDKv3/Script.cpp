@@ -315,6 +315,7 @@ const char variableNames[][0x21] = {
 #if RETRO_USE_HAPTICS
     "Engine.HapticsEnabled",
 #endif
+    "Menu3.Selection",
 };
 #endif
 
@@ -466,6 +467,10 @@ const FunctionInfo functions[] = {
     FunctionInfo("LoadWebsite", 1),
     FunctionInfo("SetPaletteEntry", 3),
     FunctionInfo("GetPaletteEntry", 3),
+    FunctionInfo("GetWindowFullScreen", 0),
+    FunctionInfo("SetWindowFullScreen", 1),
+    FunctionInfo("GetWindowScale", 0),
+    FunctionInfo("SetWindowScale", 1),
 };
 
 #if RETRO_USE_COMPILER
@@ -501,7 +506,8 @@ AliasInfo aliases[ALIAS_COUNT] = { AliasInfo("true", "1"),
                                    AliasInfo("RETRO_PS3", "3"),
                                    AliasInfo("RETRO_iOS", "4"),
                                    AliasInfo("RETRO_ANDROID", "5"),
-                                   AliasInfo("RETRO_WP7", "6") };
+                                   AliasInfo("RETRO_WP7", "6") },
+                                   AliasInfo("MENU_3", "2");
 
 const char scriptEvaluationTokens[][0x4] = { "=",  "+=", "-=", "++", "--", "*=", "/=", ">>=", "<<=", "&=",
                                              "|=", "^=", "%=", "==", ">",  ">=", "<",  "<=",  "!=" };
@@ -773,6 +779,7 @@ enum ScrVariable {
 #if RETRO_USE_HAPTICS
     VAR_ENGINEHAPTICSENABLED,
 #endif
+    VAR_MENU3SELECTION,
     VAR_MAX_CNT
 };
 
@@ -924,6 +931,10 @@ enum ScrFunction {
     FUNC_LOADWEBSITE,
     FUNC_SETPALETTEENTRY,
     FUNC_GETPALETTEENTRY,
+    FUNC_GETFULLSCREEN,
+    FUNC_SETFULLSCREEN,
+    FUNC_GETWINDOWSCALE,
+    FUNC_SETWINDOWSCALE,
     FUNC_MAX_CNT
 };
 
@@ -2942,6 +2953,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 #if RETRO_USE_HAPTICS
                     case VAR_ENGINEHAPTICSENABLED: scriptEng.operands[i] = Engine.hapticsEnabled; break;
 #endif
+                    case VAR_MENU3SELECTION: scriptEng.operands[i] = gameMenu[2].selection1; break;
                 }
             }
             else if (opcodeType == SCRIPTVAR_INTCONST) { // int constant
@@ -4116,14 +4128,20 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                 Engine.Callback(scriptEng.operands[0]);
                 break;
 #if RETRO_USE_HAPTICS
-            case FUNC_HAPTICEFFECT:
+            case FUNC_HAPTICEFFECT: {
                 opcodeSize = 0;
-                // params: scriptEng.operands[0], scriptEng.operands[1], scriptEng.operands[2], scriptEng.operands[3]
-                if (scriptEng.operands[0] != -1)
-                    QueueHapticEffect(scriptEng.operands[0]);
-                else
-                    PlayHaptics(scriptEng.operands[1], scriptEng.operands[2], scriptEng.operands[3]);
+				if (scriptEng.operands[0] != -1) {
+					SDL_GameController *controller = SDL_GameControllerOpen(0);
+					if (controller) {
+						SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
+						if (SDL_JoystickHasRumble(joystick)) {
+							SDL_JoystickRumble(joystick, 0x1000, 0x1000, scriptEng.operands[0] * 10);
+						}
+						SDL_GameControllerClose(controller);
+					}
+				}
                 break;
+			}
 #endif
             case FUNC_GETACHIEVEMENT:
                 opcodeSize = 0;
@@ -4224,6 +4242,22 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                 break;
             case FUNC_SETPALETTEENTRY: SetPaletteEntryPacked(scriptEng.operands[0], scriptEng.operands[1], scriptEng.operands[2]); break;
             case FUNC_GETPALETTEENTRY: scriptEng.operands[2] = GetPaletteEntryPacked(scriptEng.operands[0], scriptEng.operands[1]); break;
+            case FUNC_GETFULLSCREEN:
+                opcodeSize = 0;
+                GetWindowFullScreen();
+                break;
+            case FUNC_SETFULLSCREEN:
+                opcodeSize = 0;
+				SetWindowFullScreen(&scriptEng.operands[0]);
+                break;
+            case FUNC_GETWINDOWSCALE:
+                opcodeSize = 0;
+                GetWindowScale();
+                break;
+            case FUNC_SETWINDOWSCALE:
+                opcodeSize = 0;
+				SetWindowScale(&scriptEng.operands[0]);
+                break;
         }
 
         // Set Values
@@ -4896,6 +4930,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 #if RETRO_USE_HAPTICS
                     case VAR_ENGINEHAPTICSENABLED: Engine.hapticsEnabled = scriptEng.operands[i]; break;
 #endif
+                    case VAR_MENU3SELECTION: gameMenu[2].selection1 = scriptEng.operands[i]; break;
                 }
             }
             else if (opcodeType == SCRIPTVAR_INTCONST) { // int constant

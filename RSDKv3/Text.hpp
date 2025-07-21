@@ -3,7 +3,7 @@
 
 #define TEXTDATA_COUNT  (0x2800)
 #define TEXTENTRY_COUNT (0x200)
-#define TEXTMENU_COUNT  (0x2)
+#define TEXTMENU_COUNT  (0x3)
 
 #define FONTCHAR_COUNT (0x400)
 
