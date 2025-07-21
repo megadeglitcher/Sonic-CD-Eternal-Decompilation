@@ -1150,6 +1150,30 @@ void SetWindowVSync(int *enabled)
     InitRenderDevice();
 }
 
+void GetWindowScaleMode() { scriptEng.checkResult = Engine.scalingMode; }
+
+void SetWindowScaleMode(int *mode)
+{
+    if (!mode)
+        return;
+
+    Engine.scalingMode = *mode;
+    ReleaseRenderDevice();
+    InitRenderDevice();
+}
+
+void GetWindowRefreshRate() { scriptEng.checkResult = Engine.refreshRate; }
+
+void SetWindowRefreshRate(int *FPS)
+{
+    if (!FPS)
+        return;
+
+    Engine.refreshRate = *FPS;
+    ReleaseRenderDevice();
+    InitRenderDevice();
+}
+
 #if RETRO_CHECKUPDATE
 // Callback function to write the response data into our struct
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, MemoryStruct *userp) {

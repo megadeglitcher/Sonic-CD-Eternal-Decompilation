@@ -90,5 +90,9 @@ void GetWindowScale();
 void SetWindowScale(int *scale);
 void GetWindowVSync();
 void SetWindowVSync(int *enabled);
+void GetWindowScaleMode();
+void SetWindowScaleMode(int *mode);
+void GetWindowRefreshRate();
+void SetWindowRefreshRate(int *FPS);
 
 #endif //! USERDATA_H

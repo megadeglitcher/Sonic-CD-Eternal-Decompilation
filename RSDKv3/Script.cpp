@@ -473,6 +473,10 @@ const FunctionInfo functions[] = {
     FunctionInfo("SetWindowScale", 1),
     FunctionInfo("GetWindowVSync", 0),
     FunctionInfo("SetWindowVSync", 1),
+    FunctionInfo("GetWindowScaling", 0),
+    FunctionInfo("SetWindowScaling", 1),
+    FunctionInfo("GetWindowRefreshRate", 0),
+    FunctionInfo("SetWindowRefreshRate", 1),
 };
 
 #if RETRO_USE_COMPILER
@@ -939,6 +943,10 @@ enum ScrFunction {
     FUNC_SETWINDOWSCALE,
     FUNC_GETWINDOWVSYNC,
     FUNC_SETWINDOWVSYNC,
+    FUNC_GETWINDOWSCALING,
+    FUNC_SETWINDOWSCALING,
+    FUNC_GETWINDOWREFRESHRATE,
+    FUNC_SETWINDOWREFRESHRATE,
     FUNC_MAX_CNT
 };
 
@@ -4269,6 +4277,22 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
             case FUNC_SETWINDOWVSYNC:
                 opcodeSize = 0;
 				SetWindowVSync(&scriptEng.operands[0]);
+                break;
+            case FUNC_GETWINDOWSCALING:
+                opcodeSize = 0;
+                GetWindowScaleMode();
+                break;
+            case FUNC_SETWINDOWSCALING:
+                opcodeSize = 0;
+				SetWindowScaleMode(&scriptEng.operands[0]);
+                break;
+            case FUNC_GETWINDOWREFRESHRATE:
+                opcodeSize = 0;
+                GetWindowRefreshRate();
+                break;
+            case FUNC_SETWINDOWREFRESHRATE:
+                opcodeSize = 0;
+				SetWindowRefreshRate(&scriptEng.operands[0]);
                 break;
         }
 
