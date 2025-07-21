@@ -315,6 +315,7 @@ const char variableNames[][0x21] = {
 #if RETRO_USE_HAPTICS
     "Engine.HapticsEnabled",
 #endif
+    "Menu3.Selection",
 };
 #endif
 
@@ -501,7 +502,8 @@ AliasInfo aliases[ALIAS_COUNT] = { AliasInfo("true", "1"),
                                    AliasInfo("RETRO_PS3", "3"),
                                    AliasInfo("RETRO_iOS", "4"),
                                    AliasInfo("RETRO_ANDROID", "5"),
-                                   AliasInfo("RETRO_WP7", "6") };
+                                   AliasInfo("RETRO_WP7", "6") },
+                                   AliasInfo("MENU_3", "2");
 
 const char scriptEvaluationTokens[][0x4] = { "=",  "+=", "-=", "++", "--", "*=", "/=", ">>=", "<<=", "&=",
                                              "|=", "^=", "%=", "==", ">",  ">=", "<",  "<=",  "!=" };
@@ -773,6 +775,7 @@ enum ScrVariable {
 #if RETRO_USE_HAPTICS
     VAR_ENGINEHAPTICSENABLED,
 #endif
+    VAR_MENU3SELECTION,
     VAR_MAX_CNT
 };
 
@@ -2942,6 +2945,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 #if RETRO_USE_HAPTICS
                     case VAR_ENGINEHAPTICSENABLED: scriptEng.operands[i] = Engine.hapticsEnabled; break;
 #endif
+                    case VAR_MENU3SELECTION: scriptEng.operands[i] = gameMenu[2].selection1; break;
                 }
             }
             else if (opcodeType == SCRIPTVAR_INTCONST) { // int constant
@@ -4901,6 +4905,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 #if RETRO_USE_HAPTICS
                     case VAR_ENGINEHAPTICSENABLED: Engine.hapticsEnabled = scriptEng.operands[i]; break;
 #endif
+                    case VAR_MENU3SELECTION: gameMenu[2].selection1 = scriptEng.operands[i]; break;
                 }
             }
             else if (opcodeType == SCRIPTVAR_INTCONST) { // int constant
