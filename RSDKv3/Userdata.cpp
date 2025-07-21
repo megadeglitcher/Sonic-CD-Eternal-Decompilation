@@ -1138,6 +1138,18 @@ void SetWindowScale(int *scale)
     InitRenderDevice();
 }
 
+void GetWindowVSync() { scriptEng.checkResult = Engine.vsync; }
+
+void SetWindowVSync(int *enabled)
+{
+    if (!enabled)
+        return;
+
+    Engine.vsync = *enabled;
+    ReleaseRenderDevice();
+    InitRenderDevice();
+}
+
 #if RETRO_CHECKUPDATE
 // Callback function to write the response data into our struct
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, MemoryStruct *userp) {

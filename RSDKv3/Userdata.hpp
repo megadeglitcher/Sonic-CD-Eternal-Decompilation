@@ -88,5 +88,7 @@ void SetWindowFullScreen(int *fullscreen);
 int CheckUpdates(char website[]);
 void GetWindowScale();
 void SetWindowScale(int *scale);
+void GetWindowVSync();
+void SetWindowVSync(int *enabled);
 
 #endif //! USERDATA_H
