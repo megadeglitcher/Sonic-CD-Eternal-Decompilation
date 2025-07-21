@@ -467,6 +467,10 @@ const FunctionInfo functions[] = {
     FunctionInfo("LoadWebsite", 1),
     FunctionInfo("SetPaletteEntry", 3),
     FunctionInfo("GetPaletteEntry", 3),
+    FunctionInfo("GetWindowFullScreen", 0),
+    FunctionInfo("SetWindowFullScreen", 1),
+    FunctionInfo("GetWindowScale", 0),
+    FunctionInfo("SetWindowScale", 1),
 };
 
 #if RETRO_USE_COMPILER
@@ -927,6 +931,10 @@ enum ScrFunction {
     FUNC_LOADWEBSITE,
     FUNC_SETPALETTEENTRY,
     FUNC_GETPALETTEENTRY,
+    FUNC_GETFULLSCREEN,
+    FUNC_SETFULLSCREEN,
+    FUNC_GETWINDOWSCALE,
+    FUNC_SETWINDOWSCALE,
     FUNC_MAX_CNT
 };
 
@@ -4233,6 +4241,22 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                 break;
             case FUNC_SETPALETTEENTRY: SetPaletteEntryPacked(scriptEng.operands[0], scriptEng.operands[1], scriptEng.operands[2]); break;
             case FUNC_GETPALETTEENTRY: scriptEng.operands[2] = GetPaletteEntryPacked(scriptEng.operands[0], scriptEng.operands[1]); break;
+            case FUNC_GETFULLSCREEN:
+                opcodeSize = 0;
+                GetWindowFullScreen();
+                break;
+            case FUNC_SETFULLSCREEN:
+                opcodeSize = 0;
+				SetWindowFullScreen(&scriptEng.operands[0]);
+                break;
+            case FUNC_GETWINDOWSCALE:
+                opcodeSize = 0;
+                GetWindowScale();
+                break;
+            case FUNC_SETWINDOWSCALE:
+                opcodeSize = 0;
+				SetWindowScale(&scriptEng.operands[0]);
+                break;
         }
 
         // Set Values

@@ -1113,6 +1113,31 @@ void GetAchievement(int achievementID, int achievementDone)
     }
 }
 
+void GetWindowFullScreen() { scriptEng.checkResult = Engine.isFullScreen; }
+
+void SetWindowFullScreen(int *fullscreen)
+{
+    if (!fullscreen)
+        return;
+
+    Engine.isFullScreen    = *fullscreen;
+    Engine.startFullScreen = *fullscreen;
+    ReleaseRenderDevice();
+    InitRenderDevice();
+}
+
+void GetWindowScale() { scriptEng.checkResult = Engine.windowScale; }
+
+void SetWindowScale(int *scale)
+{
+    if (!scale)
+        return;
+
+	Engine.windowScale = *scale;
+    ReleaseRenderDevice();
+    InitRenderDevice();
+}
+
 #if RETRO_CHECKUPDATE
 // Callback function to write the response data into our struct
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, MemoryStruct *userp) {

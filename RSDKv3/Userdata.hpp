@@ -83,6 +83,10 @@ void SetLeaderboard(int leaderboardID, int result);
 inline void LoadAchievementsMenu() { ReadUserdata(); }
 inline void LoadLeaderboardsMenu() { ReadUserdata(); }
 void SetScreenWidth(int width, int unused);
+void GetWindowFullScreen();
+void SetWindowFullScreen(int *fullscreen);
 int CheckUpdates(char website[]);
+void GetWindowScale();
+void SetWindowScale(int *scale);
 
 #endif //! USERDATA_H
