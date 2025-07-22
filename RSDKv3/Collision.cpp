@@ -3024,11 +3024,6 @@ void EnemyCollision(int left, int top, int right, int bottom)
 {
     TouchCollision(left, top, right, bottom);
 
-#if RSDK_AUTOBUILD
-    // Skip the hammer hitboxes on autobuilds, just in case
-    return;
-#endif
-
     Player *player = &playerList[activePlayer];
 
     int hammerHitboxLeft   = 0;
@@ -3038,12 +3033,16 @@ void EnemyCollision(int left, int top, int right, int bottom)
 
 #if !RETRO_USE_ORIGINAL_CODE
     bool miniPlayerFlag = GetGlobalVariableByName("Mini_PlayerFlag");
+    bool InvisFlag = GetGlobalVariableByName("Player.InvisShield");
     sbyte playerAmy     = GetGlobalVariableByName("PLAYER_AMY") ? GetGlobalVariableByName("PLAYER_AMY") : 5;
+    sbyte playerSonic     = GetGlobalVariableByName("PLAYER_SONIC") ? GetGlobalVariableByName("PLAYER_SONIC") : 0;
     sbyte aniHammerJump = GetGlobalVariableByName("ANI_HAMMER_JUMP") ? GetGlobalVariableByName("ANI_HAMMER_JUMP") : 45;
     sbyte aniHammerDash = GetGlobalVariableByName("ANI_HAMMER_DASH") ? GetGlobalVariableByName("ANI_HAMMER_DASH") : 46;
 #else
     bool mini_PlayerFlag = globalVariables[62];
+    bool InvisFlag = globalVariables[252];
     sbyte playerAmy      = 5;
+    sbyte playerSonic      = 0;
     sbyte aniHammerJump  = 45;
     sbyte aniHammerDash  = 46;
 #endif
@@ -3063,6 +3062,22 @@ void EnemyCollision(int left, int top, int right, int bottom)
                 hammerHitboxBottom = miniPlayerFlag ? chibiHammerDashHitbox[frame + 3] : hammerDashHitbox[frame + 3];
             }
             if (player->boundEntity->animation == aniHammerJump) {
+                int frame          = (miniPlayerFlag ? player->boundEntity->frame % 2 : player->boundEntity->frame % 4) * 4;
+                hammerHitboxLeft   = miniPlayerFlag ? chibiHammerJumpHitbox[frame]     : hammerJumpHitbox[frame];
+                hammerHitboxTop    = miniPlayerFlag ? chibiHammerJumpHitbox[frame + 1] : hammerJumpHitbox[frame + 1];
+                hammerHitboxRight  = miniPlayerFlag ? chibiHammerJumpHitbox[frame + 2] : hammerJumpHitbox[frame + 2];
+                hammerHitboxBottom = miniPlayerFlag ? chibiHammerJumpHitbox[frame + 3] : hammerJumpHitbox[frame + 3];
+            }
+            if (player->boundEntity->direction) {
+                int storeHitboxLeft =  hammerHitboxLeft;
+                hammerHitboxLeft    = -hammerHitboxRight;
+                hammerHitboxRight   = -storeHitboxLeft;
+            }
+            scriptEng.checkResult = collisionRight + hammerHitboxRight > left && collisionLeft + hammerHitboxLeft < right
+                                    && collisionBottom + hammerHitboxBottom > top && collisionTop + hammerHitboxTop < bottom;
+        }
+        if (playerListPos == playerSonic) {
+            if (InvisFlag > 0) {
                 int frame          = (miniPlayerFlag ? player->boundEntity->frame % 2 : player->boundEntity->frame % 4) * 4;
                 hammerHitboxLeft   = miniPlayerFlag ? chibiHammerJumpHitbox[frame]     : hammerJumpHitbox[frame];
                 hammerHitboxTop    = miniPlayerFlag ? chibiHammerJumpHitbox[frame + 1] : hammerJumpHitbox[frame + 1];
