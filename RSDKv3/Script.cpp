@@ -477,6 +477,8 @@ const FunctionInfo functions[] = {
     FunctionInfo("SetWindowScaling", 1),
     FunctionInfo("GetWindowRefreshRate", 0),
     FunctionInfo("SetWindowRefreshRate", 1),
+    FunctionInfo("SetControllerVibration", 1),
+    FunctionInfo("GetControllerVibration", 0),
 };
 
 #if RETRO_USE_COMPILER
@@ -947,6 +949,8 @@ enum ScrFunction {
     FUNC_SETWINDOWSCALING,
     FUNC_GETWINDOWREFRESHRATE,
     FUNC_SETWINDOWREFRESHRATE,
+    FUNC_SETCONTROLLERVIBRATION,
+    FUNC_GETCONTROLLERVIBRATION,
     FUNC_MAX_CNT
 };
 
@@ -4142,14 +4146,17 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 #if RETRO_USE_HAPTICS
             case FUNC_HAPTICEFFECT: {
                 opcodeSize = 0;
-				if (scriptEng.operands[0] != -1) {
-					SDL_GameController *controller = SDL_GameControllerOpen(0);
-					if (controller) {
-						SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
-						if (SDL_JoystickHasRumble(joystick)) {
-							SDL_JoystickRumble(joystick, 0x1000, 0x1000, scriptEng.operands[0] * 10);
+				
+				if (ControllerVibRibbon == true) {
+					if (scriptEng.operands[0] != -1) {
+						SDL_GameController *controller = SDL_GameControllerOpen(0);
+						if (controller) {
+							SDL_Joystick *joystick = SDL_GameControllerGetJoystick(controller);
+							if (SDL_JoystickHasRumble(joystick)) {
+								SDL_JoystickRumble(joystick, 0x1000, 0x1000, scriptEng.operands[0] * 10);
+							}
+							SDL_GameControllerClose(controller);
 						}
-						SDL_GameControllerClose(controller);
 					}
 				}
                 break;
@@ -4293,6 +4300,14 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
             case FUNC_SETWINDOWREFRESHRATE:
                 opcodeSize = 0;
 				SetWindowRefreshRate(&scriptEng.operands[0]);
+                break;
+            case FUNC_SETCONTROLLERVIBRATION: // same for dis
+                opcodeSize = 0;
+                ControllerVibRibbon = scriptEng.operands[0];
+                break;
+            case FUNC_GETCONTROLLERVIBRATION: // and dis
+                opcodeSize = 0;
+                scriptEng.checkResult = ControllerVibRibbon;
                 break;
         }
 

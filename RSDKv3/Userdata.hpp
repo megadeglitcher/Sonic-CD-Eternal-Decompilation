@@ -42,6 +42,7 @@ extern bool disableTouchControls;
 extern int disableFocusPause;
 extern int disableFocusPause_Config;
 extern int CheckForthemUpdates;
+extern int ControllerVibRibbon;
 
 #if RETRO_USE_MOD_LOADER || !RETRO_USE_ORIGINAL_CODE
 extern bool forceUseScripts;

@@ -81,6 +81,7 @@ bool disableTouchControls    = false;
 int disableFocusPause        = 0;
 int disableFocusPause_Config = 0;
 int CheckForthemUpdates      = true;
+int ControllerVibRibbon      = false;
 
 #if RETRO_USE_MOD_LOADER || !RETRO_USE_ORIGINAL_CODE
 bool forceUseScripts        = false;
@@ -372,6 +373,7 @@ void InitUserdata()
         ini.SetInteger("Game", "DisableFocusPause", disableFocusPause = 0);
         disableFocusPause_Config = disableFocusPause;
         ini.SetInteger("Game", "CheckForUpdates", CheckForthemUpdates = true);
+        ini.SetInteger("Game", "ControllerVibration", ControllerVibRibbon = false);
 
         ini.SetBool("Window", "FullScreen", Engine.startFullScreen = DEFAULT_FULLSCREEN);
         ini.SetBool("Window", "Borderless", Engine.borderless = false);
@@ -517,6 +519,8 @@ void InitUserdata()
         disableFocusPause_Config = disableFocusPause;
         if (!ini.GetInteger("Game", "CheckForUpdates", &CheckForthemUpdates))
             CheckForthemUpdates = true;
+        if (!ini.GetInteger("Game", "ControllerVibration", &ControllerVibRibbon))
+            ControllerVibRibbon = false;
 
         int platype = -1;
         ini.GetInteger("Game", "Platform", &platype);
@@ -874,6 +878,8 @@ void WriteSettings()
     ini.SetInteger("Game", "DisableFocusPause", disableFocusPause_Config);
     ini.SetComment("Game", "UpdatesComment", "When enabled, the game will check for updates on startup.");
     ini.SetInteger("Game", "CheckForUpdates", CheckForthemUpdates);
+    ini.SetComment("Game", "ControllerComment", "When enabled, your controller will vibrate when applicable.");
+    ini.SetInteger("Game", "ControllerVibration", ControllerVibRibbon);
     ini.SetComment("Game", "PlatformComment", "The platform type. 0 is standard (PC/Console), 1 is mobile");
     ini.SetInteger("Game", "Platform", !StrComp(Engine.gamePlatform, "Standard"));
 
