@@ -316,6 +316,17 @@ const char variableNames[][0x21] = {
     "Engine.HapticsEnabled",
 #endif
     "Menu3.Selection",
+	"TempStr0",
+	"TempStr1",
+	"TempStr2",
+	"TempStr3",
+	"TempStr4",
+	"TempStr5",
+	"TempStr6",
+	"TempStr7",
+	"TempStr8",
+	"TempStr9",
+	"TempStr10",
 };
 #endif
 
@@ -479,6 +490,8 @@ const FunctionInfo functions[] = {
     FunctionInfo("SetWindowRefreshRate", 1),
     FunctionInfo("SetControllerVibration", 1),
     FunctionInfo("GetControllerVibration", 0),
+    FunctionInfo("IntToStr", 3),
+    FunctionInfo("StrLength", 2),
 };
 
 #if RETRO_USE_COMPILER
@@ -788,6 +801,17 @@ enum ScrVariable {
     VAR_ENGINEHAPTICSENABLED,
 #endif
     VAR_MENU3SELECTION,
+	VAR_TEMPSTR0,
+	VAR_TEMPSTR1,
+	VAR_TEMPSTR2,
+	VAR_TEMPSTR3,
+	VAR_TEMPSTR4,
+	VAR_TEMPSTR5,
+	VAR_TEMPSTR6,
+	VAR_TEMPSTR7,
+	VAR_TEMPSTR8,
+	VAR_TEMPSTR9,
+	VAR_TEMPSTR10,
     VAR_MAX_CNT
 };
 
@@ -951,6 +975,8 @@ enum ScrFunction {
     FUNC_SETWINDOWREFRESHRATE,
     FUNC_SETCONTROLLERVIBRATION,
     FUNC_GETCONTROLLERVIBRATION,
+    FUNC_INTTOSTR,
+    FUNC_STRLENGTH,
     FUNC_MAX_CNT
 };
 
@@ -2970,6 +2996,17 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     case VAR_ENGINEHAPTICSENABLED: scriptEng.operands[i] = Engine.hapticsEnabled; break;
 #endif
                     case VAR_MENU3SELECTION: scriptEng.operands[i] = gameMenu[2].selection1; break;
+					case VAR_TEMPSTR0:  StrCopy(scriptText, scriptEng.tempStr[0]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[0]);  break;
+					case VAR_TEMPSTR1:  StrCopy(scriptText, scriptEng.tempStr[1]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[1]);  break;
+					case VAR_TEMPSTR2:  StrCopy(scriptText, scriptEng.tempStr[2]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[2]);  break;
+					case VAR_TEMPSTR3:  StrCopy(scriptText, scriptEng.tempStr[3]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[3]);  break;
+					case VAR_TEMPSTR4:  StrCopy(scriptText, scriptEng.tempStr[4]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[4]);  break;
+					case VAR_TEMPSTR5:  StrCopy(scriptText, scriptEng.tempStr[5]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[5]);  break;
+					case VAR_TEMPSTR6:  StrCopy(scriptText, scriptEng.tempStr[6]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[6]);  break;
+					case VAR_TEMPSTR7:  StrCopy(scriptText, scriptEng.tempStr[7]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[7]);  break;
+					case VAR_TEMPSTR8:  StrCopy(scriptText, scriptEng.tempStr[8]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[8]);  break;
+					case VAR_TEMPSTR9:  StrCopy(scriptText, scriptEng.tempStr[9]);  StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[9]);  break;
+					case VAR_TEMPSTR10: StrCopy(scriptText, scriptEng.tempStr[10]); StrCopy(scriptEng.operandStr[i], scriptEng.tempStr[10]); break;
                 }
             }
             else if (opcodeType == SCRIPTVAR_INTCONST) { // int constant
@@ -2991,6 +3028,7 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                         default: break;
                     }
                 }
+                StrCopy(scriptEng.operandStr[i], scriptText); //Set the string operand
                 scriptCodePtr++;
             }
         }
@@ -2999,6 +3037,30 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
         Entity *entity           = &objectEntityList[objectLoop];
         Player *player           = &playerList[activePlayer];
         SpriteFrame *spriteFrame = nullptr;
+
+		// String Var Functions
+		switch (opcode) {
+			default: break;
+			case FUNC_EQUAL: StrCopy(scriptEng.operandStr[0], scriptEng.operandStr[1]); break; //string = string
+			case FUNC_ADD: StrAdd(scriptEng.operandStr[0], scriptEng.operandStr[1]); break; //string += string
+			case FUNC_SUB: { //string -= int letterCountRemoved
+				if (StrLength(scriptEng.operandStr[0]) > scriptEng.operands[1] && scriptEng.operands[1] > 0) //you cant have a negative string length!!
+					scriptEng.operandStr[0][StrLength(scriptEng.operandStr[0]) - scriptEng.operands[1]] = '\0';
+				else
+					scriptEng.operandStr[0][0] = '\0'; //Null-terminate the start of the string
+				break;
+			}
+			case FUNC_INTTOSTR: { //IntToStr(string store, int numToConvert, int conversionType)
+				switch (scriptEng.operands[2]) {
+					default: break;
+					case 0: sprintf(scriptEng.operandStr[0], "%d", scriptEng.operands[1]); break; //Number
+					case 1: sprintf(scriptEng.operandStr[0], "%x", scriptEng.operands[1]); break; //Lowercase hex
+					case 2: sprintf(scriptEng.operandStr[0], "%X", scriptEng.operands[1]); break; //Uppercase HEX
+				}
+				break;
+			}
+			case FUNC_STRLENGTH: scriptEng.operands[0] = StrLength(scriptText); break; //StrLength(int store, string lengthOf)
+		}
 
         // Functions
         switch (opcode) {
@@ -4982,6 +5044,17 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
                     case VAR_ENGINEHAPTICSENABLED: Engine.hapticsEnabled = scriptEng.operands[i]; break;
 #endif
                     case VAR_MENU3SELECTION: gameMenu[2].selection1 = scriptEng.operands[i]; break;
+					case VAR_TEMPSTR0:  StrCopy(scriptEng.tempStr[0],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR1:  StrCopy(scriptEng.tempStr[1],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR2:  StrCopy(scriptEng.tempStr[2],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR3:  StrCopy(scriptEng.tempStr[3],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR4:  StrCopy(scriptEng.tempStr[4],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR5:  StrCopy(scriptEng.tempStr[5],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR6:  StrCopy(scriptEng.tempStr[6],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR7:  StrCopy(scriptEng.tempStr[7],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR8:  StrCopy(scriptEng.tempStr[8],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR9:  StrCopy(scriptEng.tempStr[9],  scriptEng.operandStr[i]);
+					case VAR_TEMPSTR10: StrCopy(scriptEng.tempStr[10], scriptEng.operandStr[i]);
                 }
             }
             else if (opcodeType == SCRIPTVAR_INTCONST) { // int constant

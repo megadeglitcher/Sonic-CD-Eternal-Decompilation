@@ -41,6 +41,8 @@ struct ScriptEngine {
     int tempValue[16];
     int arrayPosition[3];
     int checkResult;
+    char operandStr[10][0x4000];
+    char tempStr[16][0x4000];
 };
 
 enum ScriptSubs { SUB_MAIN = 0, SUB_PLAYERINTERACTION = 1, SUB_DRAW = 2, SUB_SETUP = 3 };
