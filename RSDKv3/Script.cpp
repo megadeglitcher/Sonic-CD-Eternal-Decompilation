@@ -316,6 +316,12 @@ const char variableNames[][0x21] = {
     "Engine.HapticsEnabled",
 #endif
     "Menu3.Selection",
+//	"ControllerVibration",	// Get/SetControllerVibration
+//	"Screen.Fullscreen",	// Get/SetWindowFullScreen
+//	"Screen.Scale",			// Get/SetWindowScale
+//	"Screen.Scalemode",		// Get/SetWindowScaling
+//	"Screen.VSync",			// Get/SetWindowVSync
+//	"Screen.RefreshRate",	// Get/SetWindowRefreshRate
 	"TempStr0",
 	"TempStr1",
 	"TempStr2",
@@ -3041,25 +3047,27 @@ void ProcessScript(int scriptCodeStart, int jumpTableStart, byte scriptSub)
 		// String Var Functions
 		switch (opcode) {
 			default: break;
-			case FUNC_EQUAL: StrCopy(scriptEng.operandStr[0], scriptEng.operandStr[1]); break; //string = string
-			case FUNC_ADD: StrAdd(scriptEng.operandStr[0], scriptEng.operandStr[1]); break; //string += string
-			case FUNC_SUB: { //string -= int letterCountRemoved
+			case FUNC_EQUAL: StrCopy(scriptEng.operandStr[0], scriptEng.operandStr[1]); break;	//string = string
+			case FUNC_ADD: StrAdd(scriptEng.operandStr[0], scriptEng.operandStr[1]); break;		//string += string
+			case FUNC_SUB: {																	//string -= int letterCountRemoved
 				if (StrLength(scriptEng.operandStr[0]) > scriptEng.operands[1] && scriptEng.operands[1] > 0) //you cant have a negative string length!!
 					scriptEng.operandStr[0][StrLength(scriptEng.operandStr[0]) - scriptEng.operands[1]] = '\0';
 				else
 					scriptEng.operandStr[0][0] = '\0'; //Null-terminate the start of the string
 				break;
 			}
-			case FUNC_INTTOSTR: { //IntToStr(string store, int numToConvert, int conversionType)
+			//IntToStr(string store, int numToConvert, int conversionType)
+			case FUNC_INTTOSTR: { 
 				switch (scriptEng.operands[2]) {
 					default: break;
-					case 0: sprintf(scriptEng.operandStr[0], "%d", scriptEng.operands[1]); break; //Number
+					case 0: sprintf(scriptEng.operandStr[0], "%d", scriptEng.operands[1]); break; //Decimal
 					case 1: sprintf(scriptEng.operandStr[0], "%x", scriptEng.operands[1]); break; //Lowercase hex
 					case 2: sprintf(scriptEng.operandStr[0], "%X", scriptEng.operands[1]); break; //Uppercase HEX
 				}
 				break;
 			}
-			case FUNC_STRLENGTH: scriptEng.operands[0] = StrLength(scriptText); break; //StrLength(int store, string lengthOf)
+			//StrLength(int store, string lengthOf)
+			case FUNC_STRLENGTH: scriptEng.operands[0] = StrLength(scriptText); break;
 		}
 
         // Functions
